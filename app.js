@@ -91,6 +91,7 @@ app.get("/login"  ,  async(req ,res) =>{
 
 app.get("/register"  ,  async(req ,res) =>{
   res.render('Signup')
+  
  })
  
 
