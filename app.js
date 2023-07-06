@@ -80,17 +80,17 @@ passport.deserializeUser(async(userId, done) => {
 
 
 app.get("/"  ,  async(req ,res) =>{
-res.render('homepage')
+res.render('Homepage')
 })
 
 
 
 app.get("/login"  ,  async(req ,res) =>{
- res.render('login')
+ res.render('Login')
 })
 
 app.get("/register"  ,  async(req ,res) =>{
-  res.render('signup')
+  res.render('Signup')
  })
  
 
