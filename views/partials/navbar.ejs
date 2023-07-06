@@ -1,9 +1,13 @@
 <nav class="bg-slate-800 h-[4rem] flex items-center w-full">
     <div class="flex flex-row justify-between w-11/12 mx-auto">
 
-        <div class="log text-white font-bold flex flex-row">
-            <button id="menuBtn" class="flex sm:hidden mx-2">bars</button>
+        <div class="log text-white justify-center items-center font-bold flex flex-row">
+            <button id="menuBtn" class="flex sm:hidden ml-2 mr-4">
+                <i class="fa-solid fa-bars-staggered"></i>
+                                  </button>
+           <a href="/">
             <img src="assets/logo.png" class="w-16" alt="">
+           </a>
         </div>
         <div id="navMenu" class="menu hidden flex-row gap-2 sm:flex">
             <a href="#" class="  text-gray-200 hover:text-white  py-1 px-2 rounded-md">About</a>          
@@ -16,3 +20,4 @@
     </div>
   </nav>
   
+  <%- include("./sidebar") %>
