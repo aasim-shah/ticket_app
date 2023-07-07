@@ -6,6 +6,8 @@ const  userModel = require('./models/userModel')
 const bcrypt = require('bcrypt')
 const passport = require('passport')
 const flash = require('express-flash')
+const nodemailer = require('nodemailer');
+
 const passportLocal = require('passport-local').Strategy
 const session = require('express-session')
 const port = process.env.PORT || 5000;
@@ -26,7 +28,33 @@ const upload = multer({ storage: storage })
 mongoose.connect('mongodb://keptxtech:mardan8110@ac-oqhdud5-shard-00-00.v8w9wry.mongodb.net:27017,ac-oqhdud5-shard-00-01.v8w9wry.mongodb.net:27017,ac-oqhdud5-shard-00-02.v8w9wry.mongodb.net:27017/summit_new?ssl=true&replicaSet=atlas-q5c8vd-shard-0&authSource=admin&retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true }).then(res => console.log("db connected")).catch((err) => { console.log(err); });
 
 
+const transforter = nodemailer.createTransport({
+  service : "gmail",
+  auth : {
+      user : "mernstackdevv@gmail.com",
+      pass : "opriidznqqkbyzrm"
+  }
+})
 
+
+
+
+const sendResetPasswordEmail = (recipientEmail, otp) => {
+  const mailOptions = {
+    from: 'mernstackdevv@gmail.com',
+    to: recipientEmail,
+    subject: 'Reset Your Password',
+    html: `<p>Your Reset Password OTP is :</p><p>${otp}</p>`,
+  };
+
+  transforter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log('Error occurred while sending email: ', error.message);
+    } else {
+      console.log('Password reset email sent successfully!');
+    }
+  });
+};
 
 const checkAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) { return next() }
@@ -116,7 +144,28 @@ app.get("/buyTicket/:id"  ,  async(req ,res) =>{
   res.render('BuyTicket' , {id})
  })
  
+app.post("/resetPassword"  ,  async(req ,res) =>{
+  const recipientEmail = 'asimshah8110@gmail.com';
+  const {email} = req.body
 
+var randomFixedInteger = function (length) {
+  return Math.floor(Math.pow(10, length-1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length-1) - 1));
+}
+const otp = randomFixedInteger(6)
+
+sendResetPasswordEmail(email, otp);
+req.flash('error' , "Password reset email sent successfully !")
+  res.render('ResetPassword' , {step : 2} )
+ })
+ 
+
+ app.get("/resetPassword"  ,  async(req ,res) =>{
+
+  res.render('ResetPassword' , {step : 1})
+ })
+ app.post("/verifyOTP"  ,  async(req ,res) =>{
+  res.render('ResetPassword' , {step : 3})
+ })
 
 
 app.post("/register" ,  async(req ,res) =>{
