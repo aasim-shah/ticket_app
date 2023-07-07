@@ -110,6 +110,11 @@ app.get("/enter/:id"  ,  async(req ,res) =>{
   const {id} = req.params
   res.render('EnterEvent' , {id})
  })
+
+app.get("/buyTicket/:id"  ,  async(req ,res) =>{
+  const {id} = req.params
+  res.render('BuyTicket' , {id})
+ })
  
 
 
