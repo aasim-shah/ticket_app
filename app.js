@@ -41,6 +41,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.set("view engine" , "ejs")
 app.use(express.static('public'));
+app.use('/upcoming', express.static('public'));
+app.use('/enter', express.static('public'));
 
 
 
@@ -92,6 +94,21 @@ app.get("/login"  ,  async(req ,res) =>{
 app.get("/register"  ,  async(req ,res) =>{
   res.render('Signup')
   
+ })
+app.get("/profile"  ,  async(req ,res) =>{
+  res.render('Profile')
+
+ })
+app.get("/upcoming"  ,  async(req ,res) =>{
+  res.render('Upcoming')
+ })
+app.get("/upcoming/:id"  ,  async(req ,res) =>{
+  const {id} = req.params
+  res.render('EventDetails' , {id})
+ })
+app.get("/enter/:id"  ,  async(req ,res) =>{
+  const {id} = req.params
+  res.render('EnterEvent' , {id})
  })
  
 

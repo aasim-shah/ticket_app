@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Event Details</title>
+  </head>
+
+
+  <body class="bg-slate-900">
+    <%- include("./partials/navbar") %>
+
+   <div class="w-full mt-4 ">
+    <div class="eventImg my-5">
+        <img src="assets/bg-2.jpg" class="w-[20rem] sm:w-[30rem] mx-auto" alt="">
+    </div>
+    <div class="text-white w-11/12 mx-auto">
+        Event details : Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni ullam officiis unde eius minima dolorum dolorem quisquam dolor illum maiores voluptatibus nam ipsum suscipit dolore asperiores, incidunt non harum labore.
+    </div>
+    <div class="text-white mt-3 w-11/12 mx-auto">
+        Event Dated : <span class="text-sm text-gray-300"><%- new Date %></span>
+    </div>
+
+    <div class="flex w-10/12 mx-auto mt-5">
+        <a href="/enter/3" class="py-2 text-center sm:w-4/12 px-3 bg-blue-400 rounded-md text-white font-bold w-full  ">Enter </a>
+    </div>
+   </div>
+
+
+
+
+
+
+    <%- include("./partials/footer") %>
+    
