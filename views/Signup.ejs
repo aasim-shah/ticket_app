@@ -22,7 +22,7 @@
       </p>
       <% } %>
 
-        <form method="post" action="/register" class="mt-12 ">
+        <form method="post" action="/register" class="mt-12" enctype="multipart/form-data">
           <div class="flex flex-row gap-2 mb-3">
             <input type="text" name="firstName" placeholder="First Name ..." id=""
               class=" border-2 text-white bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-6/12">
@@ -31,7 +31,7 @@
           </div>
         
           <div class="mb-3">
-            <input name="email" type="email" placeholder="Email "
+            <input name="username" type="email" placeholder="Email "
               class=" border-2 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full">
           </div>
           <div class="mb-3">
