@@ -83,6 +83,7 @@ async function main(){
         photo: String,
         accountBalance: Number,
         resetPasswordToken: String,
+        isAdmin : Boolean,
         resetPasswordExpires: Number,
         verificationtToken: String,
         verified: Boolean
@@ -335,7 +336,7 @@ async function main(){
     });
 
     app.get('/admin', function(req, res){
-        res.render('/adminLogin');
+        res.render('adminLogin' , {message : ""});
     });
 
     app.get('/adminLoginFail', function(req, res){
@@ -360,11 +361,12 @@ async function main(){
     });
 
     app.get('/adminHome', async function(req, res){
-        if(req.isAuthenticated()){
+        console.log(req.user)
+        if(req.isAuthenticated() && req.user.isAdmin){
             const events = await Event.find();
             const users = await User.find();
             const tickets = await Ticket.find();
-            res.render('adminHome', {events: events, users: users, tickets: tickets});
+            res.render('adminHome', {events: events, users: users, tickets: tickets , moment});
         }else{
             res.redirect('/');
         }

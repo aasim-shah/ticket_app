@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Admin</title>
+  </head>
+
+
+  <body class="bg-slate-900">
+    <nav class="bg-slate-800 h-[4rem] flex items-center w-full">
+      <div class="flex flex-row justify-between w-11/12 mx-auto">
+  
+          <div class="log text-white justify-center items-center font-bold flex flex-row">
+              <button id="menuBtn" class="flex sm:hidden ml-2 mr-4">
+                  <i class="fa-solid fa-bars-staggered"></i>
+                                    </button>
+             <a href="/">
+              <img src="/assets/logo.png" class="w-16" alt="">
+             </a>
+          </div>
+      </div>
+    </nav>
+    
+    <%- include("./partials/sidebar") %>
+  
+
+    <div class="w-9/12 sm:w-4/12 mx-auto">
+      <% if(message){%>
+        <p class="text-black py-2 bg-red-200 text-center my-2"><%= message %></p>
+        <% }  %>
+        <p class="text-lg mt-12 text-white text-lg font-semibold mb-5 text-center">Admin Dashboard</p>
+
+        <form method="post" action="/login">
+            <div class="mb-3">
+              <input type="text" name="username" placeholder="Email " class="border-2 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full" >
+            </div>
+            <div class="mb-3">
+              <input name="password" type="password" placeholder="Password " class="border-2 mb-3 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full">
+            </div>
+            <div class="">
+              <button type="submit" class="py-2  px-3 bg-blue-400 rounded-md text-white font-bold w-full">Login</button>
+            </div>
+          </form>
+        
+     
+    </div>
+
+
+
+
+
+
+
+    <%- include("./partials/footer") %>
+    
