@@ -15,18 +15,18 @@
 
 
     <div class="w-9/12 sm:w-4/12 mx-auto">
-      <% if(messages.error){%>
-        <p class="text-black py-2 bg-red-200 text-center my-2"><%= messages.error %></p>
+      <% if(message){%>
+        <p class="text-black py-2 bg-red-200 text-center my-2"><%= message %></p>
         <% }  %>
         <p class="text-lg mt-12 text-white text-lg font-semibold mb-5 text-center">Welcom back</p>
 
         <form method="post" action="/login">
             <div class="mb-3">
-              <input type="text" name="email" placeholder="Email " class="border-2 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full" >
+              <input type="text" name="username" placeholder="Email " class="border-2 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full" >
             </div>
             <div class="mb-3">
               <input name="password" type="password" placeholder="Password " class="border-2 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full">
-              <a href="resetPassword" class="text-sm  mt-2 text-gray-300">Reset Password</a>
+              <a href="/forgot-password" class="text-sm  mt-4  text-gray-300">Reset Password</a>
             </div>
             <div class="">
               <button type="submit" class="py-2  px-3 bg-blue-400 rounded-md text-white font-bold w-full">Login</button>

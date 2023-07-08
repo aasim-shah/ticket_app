@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payment Form</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .payment-form {
+      max-width: 400px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #card-errors {
+      color: #dc3545;
+      margin-top: 10px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .success-message {
+      color: #28a745;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .error-message {
+      color: #dc3545;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    #name{
+      border: 0px;
+    }
+
+    #name:focus{
+      border: 0px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Payment Form</h1>
+  <div class="payment-form">
+    <form id="payment-form">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name">
+      </div>
+      <div class="form-group">
+        <label for="card-element">Credit or debit card</label>
+        <div id="card-element"></div>
+        <div id="card-errors" role="alert"></div>
+      </div>
+      <button type="submit" value="<%= user %>" name="buyer">Submit Payment</button>
+    </form>
+  </div>
+
+  <script>
+    // Set your publishable key
+    var stripe = Stripe('<%- key %>');
+
+    // Create an instance of Elements
+    var elements = stripe.elements();
+
+    // Create an instance of the card Element
+    var card = elements.create('card');
+
+    // Add an instance of the card Element into the `card-element` <div>
+    card.mount('#card-element');
+
+    // Handle form submission
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      // Disable the submit button to prevent multiple clicks
+      form.querySelector('button').disabled = true;
+
+      // Create a payment method using the card Element
+      stripe.createPaymentMethod('card', card, {
+        billing_details: {
+          name: form.name.value
+        }
+      })
+        .then(function(result) {
+          if (result.error) {
+            // Display error message in the card-errors <div>
+            var errorElement = document.getElementById('card-errors');
+            errorElement.textContent = result.error.message;
+          } else {
+            // Send the payment method ID to your server
+            fetch('/processPayment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ paymentMethodId: result.paymentMethod.id })
+            })
+            .then(function(response) {
+              return response.json();
+            })
+            .then(function(data) {
+              // Handle the response from your server
+              if (data.success) {
+                // Payment succeeded, show a success message to the user
+                var successMessage = document.createElement('div');
+                successMessage.classList.add('success-message');
+                successMessage.textContent = 'Payment successful!';
+                form.appendChild(successMessage);
+              } else {
+                // Payment failed, show an error message to the user
+                var errorMessage = document.createElement('div');
+                errorMessage.classList.add('error-message');
+                errorMessage.textContent = 'Payment failed!';
+                form.appendChild(errorMessage);
+              }
+            });
+          }
+        });
+    });
+  </script>
+</body>
+</html>

@@ -15,18 +15,37 @@
 
 
     <div class="w-full mt-4">
-        <div class="eventImg my-5">
-            <img src="/assets/bg-2.jpg" class="w-[20rem] sm:w-[30rem] mx-auto" alt="">
+      <div class="eventImg my-5">
+        <!-- <img src="/assets/bg-2.jpg" class="w-[20rem] sm:w-11/12 mx-auto" alt=""> -->
+        <!-- <div class="w-10/12 h-[20rem] bg-slate-700 rounded-md flex justify-center items-center text-white font-bold text-2xl mx-auto">Event Image</div> -->
+        <video autoplay controls class="w-10/12 h-[25rem] mx-auto">
+          <source src="https://static.videezy.com/system/resources/previews/000/050/812/original/alb_scrntext1003_1080p_24fps.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        
+      </div>
+        <div class="flex flex-col w-10/12 mx-auto">
+          <p class="text-white">Event starts . <%= eventDetails.startdate %></p>
+          <p class="text-white">Event ends . <%= eventDetails.enddate %></p>
         </div>
-        <p class="text-white text-center my-4">Choose Number</p>
+        <p class="text-white text-center my-4">Choose Ticket Number</p>
         
         <div class="bg-slate-900 p-4 rounded-lg shadow-lg">
-            <div class="flex flex-wrap w-[22rem] mx-auto justify-center items-center">
-              <% for (let i = 1; i <= 30; i++) { %>
-                  <a href="/buyTicket/<%= i %>" class="bg-slate-700 w-12 ml-2 h-12 mt-2 rounded-lg p-4 text-center">
-                    <span class="text-lg text-white font-bold"><%= i %></span>
-                  </a>
-              <% } %>
+            <div class="flex flex-wrap w-[22rem] mx-auto justify-center text-white items-center">
+              <% array1.forEach(function(item) { %>
+                <% tickets.forEach(function(ticket) { %>
+                 <% if(item === ticket.value){ %>
+                  <button disabled class=" flex justify-center items-center w-12 ml-2 h-12 mt-2 rounded-lg p-4 text-center bg-slate-900 border border-gray-600">
+                    <span class="text-lg text-white font-bold"><%= item %></span>
+                  </button>
+                  <%}else{%>
+                    <a href="/addToCart/<%= eventDetails._id %>/<%= item %>" class=" flex justify-center items-center w-12 ml-2 h-12 mt-2 rounded-lg p-4 text-center bg-slate-800">
+                      <span class="text-lg text-white font-bold"><%= item %></span>
+                    </a>
+                  <%}%>
+                <% }) %>
+              <% }) %>
+              
             </div>
           </div>
           

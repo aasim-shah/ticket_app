@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Loginpage</title>
+    <title>Events</title>
   </head>
 
 
@@ -17,29 +17,46 @@
     <div class="w-10/12 mx-auto my-4 sm:my-12">
         <p class="text-white font-bold text-center mb-4 sm:mb-10">Upcoming Events</p>
         <div class="flex-col ">
-            <div class="text-white text-center mb-3">
-                <a href="/Upcoming/1">
-                    Event 1
-                </a>
+           <!-- <% if(events && events.length > 0){ %>
+
+         
+            <% events.forEach((event) =>{ %>
+                <div class="text-white text-center mb-3">
+                    <a href="/Upcoming/1">
+                        Event <%= event.eventName %>
+                    </a>
+                </div>
+                <%})%>
+
+            <%}%> -->
+            <div class="w-[20rem]  overflow-x-scroll sm:overflow-x-auto	sm:w-full">
+
+            <table class="mx-auto">
+                <thead>
+                  <tr>
+                    <th class="px-1 text-white py-2">Event Name</th>
+                    <th class="px-4 text-white py-2">Start Date</th>
+                    <th class="px-4 text-white py-2">End Date</th>
+                    <th class="px-4 text-white py-2">Status</th>
+                    <th class="px-4 text-white py-2">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% events.forEach(event => { %>
+                  <tr>
+                    <td class=" px-4 text-white py-2"><%= event.eventName %></td>
+                    <td class=" px-4 text-white py-2"><%= moment(event.startdate).format('DD/MM/YY'); %></td>
+                    <td class=" px-4 text-white py-2"><%= moment(event.enddate).format('DD/MM/YY'); %></td>
+                    <td class=" px-4 text-white py-2"><%= event.eventEnds ? "Ended" : "Waiting" %></td>
+                    <td class=" px-4 text-white py-2"><a href="/eventDraw/<%= event._id %>" class="py-2  px-3 bg-blue-400 rounded-md text-white font-bold w-full">Enter</a></td>
+                  </tr>
+                  <% }) %>
+                </tbody>
+              </table>
             </div>
+
           
-            <div class="text-white text-center mb-3">
-                <a href="/Upcoming/2">
-                    Event 2
-                </a>
-            </div>
-          
-            <div class="text-white text-center mb-3">
-                <a href="/Upcoming/3">
-                    Event 3
-                </a>
-            </div>
-          
-            <div class="text-white text-center mb-3">
-                <a href="/Upcoming/4">
-                    Event 4
-                </a>
-            </div>
+           
           
         </div>
     </div>

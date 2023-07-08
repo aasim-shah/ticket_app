@@ -16,13 +16,13 @@
   <%- include("./partials/navbar") %>
 
   <div class="w-9/12 sm:w-5/12 mx-auto">
-    <% if(messages.error){%>
+    <% if(message){%>
       <p class="text-black py-2 bg-red-200 text-center my-2">
-        <%= messages.error %>
+        <%= message %>
       </p>
       <% } %>
 
-        <form method="post" action="/register" class="mt-12" enctype="multipart/form-data">
+        <form method="post" action="/register" class="mt-12 " enctype="multipart/form-data">
           <div class="flex flex-row gap-2 mb-3">
             <input type="text" name="firstName" placeholder="First Name ..." id=""
               class=" border-2 text-white bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-6/12">
@@ -31,9 +31,18 @@
           </div>
         
           <div class="mb-3">
-            <input name="username" type="email" placeholder="Email "
+            <input name="email" type="email" placeholder="Email "
               class=" border-2 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full">
           </div>
+          <div class="mb-3">
+            <input name="phone" type="number" placeholder="Phone "
+              class=" border-2 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full">
+          </div>
+          <div class="mb-3">
+            <input name="image" type="file" placeholder=" "
+              class=" border-2 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full">
+          </div>
+        
           <div class="mb-3">
             <input name="password" type="password" placeholder="Password "
               class=" border-2 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full">

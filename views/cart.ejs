@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Cart</title>
+</head>
+
+
+<body class="bg-slate-900">
+    <%- include("./partials/navbar") %>
+
+
+        <div class="w-full mt-4">
+            <p class="text-white my-12 text-center">MY cart</p>
+            <% if(tickets.length> 0){tickets.forEach(ticket => { %>
+                <div
+                    class="flex flex-row gap-2 w-fit mb-2 mx-auto bg-slate-900 border border-slate-700 py-2 px-5 rounded-md">
+                    <p class="text-white"><span class="text-sm text-gray-400">Event Id</span> . <%= ticket.eventId %>
+                    </p>
+                    <span class="text-sm text-yellow-400">|</span>
+                    <p class="text-white"><span class="text-sm text-gray-400">Ticket Id</span> . <%= ticket._id %>
+                    </p>
+                    <span class="text-sm text-yellow-400">|</span>
+                    <p class="text-white"> <span class="text-sm text-gray-400">Ticket Value</span> . <%= ticket.value %>
+                    </p>
+                    <a href="/deleteTicket/<%= ticket._id %>" class="py-1 px-1 bg-red-600 px-2 ml-7 rounded-md text-white font-bold text-center"><i class="fa-solid fa-trash-can"></i></a>
+                </div>
+                </div>
+                <%}) }%>
+
+                    <div class="flex justify-center items-center mt-6">
+                        <a href="/buyTickets" class="py-2  px-3 bg-slate-700 w-[15rem] rounded-md text-white font-bold text-center">Purchanse
+                            Now</button>
+                        </a>
+                    </div>
+
+
+
+
+
+                    <%- include("./partials/footer") %>
