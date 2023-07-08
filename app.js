@@ -156,7 +156,7 @@ async function main(){
                 console.log(err);
             }
         });
-        res.render('login', {message: "Username and password does not match!"});
+        res.render('Login', {message: "Username and password does not match!"});
     });
 
     app.get('/logout', function(req, res){

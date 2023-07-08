@@ -13,8 +13,21 @@
 </head>
 
 <body class="w-full  bg-slate-900">
-  <%- include("./partials/navbar") %>
+  <nav class="bg-slate-800 h-[4rem] flex items-center w-full">
+    <div class="flex flex-row justify-between w-11/12 mx-auto">
 
+        <div class="log text-white justify-center items-center font-bold flex flex-row">
+            <button id="menuBtn" class="flex sm:hidden ml-2 mr-4">
+                <i class="fa-solid fa-bars-staggered"></i>
+                                  </button>
+           <a href="/">
+            <img src="/assets/logo.png" class="w-16" alt="">
+           </a>
+        </div>
+    </div>
+  </nav>
+  
+  <%- include("./partials/sidebar") %>
   <div class="w-9/12 sm:w-5/12 mx-auto">
     <% if(message){%>
       <p class="text-black py-2 bg-red-200 text-center my-2">
