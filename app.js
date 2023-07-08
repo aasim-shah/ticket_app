@@ -494,7 +494,11 @@ async function main(){
                         console.log(err);
                     }else{
                         passport.authenticate('local', {failureRedirect: '/loginFail'})(req, res, function(){
-                            res.redirect('/');
+                            if(req.user.isAdmin){
+                                res.redirect('/adminHome');
+                            }else{
+                                res.redirect('/');
+                            }
                         });
                     }
                 });
