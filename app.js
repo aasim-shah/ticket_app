@@ -566,10 +566,10 @@ async function main(){
     });
 
     app.get('/buyTickets', async function(req, res){
-        res.render('payment', {user: req.user, key: process.env.STRPIEPUBLISHABLEKEY});
+        res.render('payment', {user: req.user, key: process.env.STRIPEPUBLISHABLEKEY});
     });
     app.post('/buyTickets', async function(req, res){
-        res.render('payment', {user: req.user, key: process.env.STRPIEPUBLISHABLEKEY});
+        res.render('payment', {user: req.user, key: process.env.STRIPEPUBLISHABLEKEY});
     });
 
     app.post('/processPayment', async function(req, res){
