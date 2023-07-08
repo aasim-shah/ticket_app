@@ -32,19 +32,17 @@
         
         <div class="bg-slate-900 p-4 rounded-lg shadow-lg">
             <div class="flex flex-wrap w-[22rem] mx-auto justify-center text-white items-center">
-              <% array1.forEach(function(item) { %>
-                <% tickets.forEach(function(ticket) { %>
-                 <% if(item === ticket.value){ %>
-                  <button disabled class=" flex justify-center items-center w-12 ml-2 h-12 mt-2 rounded-lg p-4 text-center bg-slate-900 border border-gray-600">
-                    <span class="text-lg text-white font-bold"><%= item %></span>
-                  </button>
-                  <%}else{%>
-                    <a href="/addToCart/<%= eventDetails._id %>/<%= item %>" class=" flex justify-center items-center w-12 ml-2 h-12 mt-2 rounded-lg p-4 text-center bg-slate-800">
-                      <span class="text-lg text-white font-bold"><%= item %></span>
-                    </a>
-                  <%}%>
+              
+                <% array1.forEach((num) => { %>
+                 
+                  <% if (tickets.find(obj => obj.value === num)) { %>
+                    <span class="py-1 flex justify-center items-center w-12 ml-2 h-12 mt-2 rounded-lg p-4 text-center bg-blue-500"><%= num %></span>
+                  <% } else { %>
+                    <a href="" class="py-1 flex justify-center items-center w-12 ml-2 h-12 mt-2 rounded-lg p-4 text-center  <%= tickets.find(obj => obj.value === num) ? 'bg-blue-500 text-white' : 'bg-slate-800' %>">
+                    <%= num %>
+                  </a>
+                  <% } %>
                 <% }) %>
-              <% }) %>
               
             </div>
           </div>

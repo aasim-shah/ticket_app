@@ -292,15 +292,12 @@ async function main(){
         // if(req.isAuthenticated()){
             const eventDetails = await Event.findOne({_id: Number(req.params.eventId)});
             const tickets = await Ticket.find({eventId: req.params.eventId});
-            var numbers = [];
+            const array1 = Array.from({ length: 25 }, (_, i) => i + 1); // [1, 2, 3, ..., 25]
 
-            for (var i = 1; i <= 25; i++) {
-            numbers.push(i);
-            }
-            console.log({numbers})
+            console.log({array1})
             // res.render('/EventDetails', {eventDetails: eventDetails, tickets: tickets, user: req.user});
             console.log({tickets})
-            res.render('EnterEvent', {eventDetails: eventDetails, tickets: tickets  , array1 : numbers});
+            res.render('EnterEvent', {eventDetails: eventDetails, tickets: tickets  , array1 });
             
         // }
     });
