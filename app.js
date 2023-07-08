@@ -275,7 +275,7 @@ async function main(){
     app.get('/cart', async function(req, res){
         if(req.isAuthenticated()){
             const tickets = await Ticket.find({userId: Number(req.user._id), bought: false});
-            res.render('Cart', {tickets: tickets, user: req.user});
+            res.render('cart', {tickets: tickets, user: req.user});
             
         }else{
             res.redirect('/login');
