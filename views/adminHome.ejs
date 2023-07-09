@@ -23,7 +23,6 @@
         style="z-index: 99;">
         <div id="navMenu" class="flex flex-col justify-center items-center gap-2 ">
           <a href="#" class="  text-gray-200 hover:text-white  py-1 px-2 rounded-md">Dashboard</a>
-          <a href="#" class="  text-gray-200 hover:text-white  py-1 px-2 rounded-md">Users </a>
           <a href="#" class="  text-gray-200 hover:text-white  py-1 px-2 rounded-md">Tickets</a>
           <div class="flex flex-col ">
             <button class="sidebar-button  text-gray-200 hover:text-white  py-1 px-2 rounded-md"
@@ -47,6 +46,9 @@
 
             </ul>
           </div>
+          <div class="flex mt-12">
+            <a href="/logout" class="text-white rounded-md bg-red-600 py-1 px-3 ">Logout</a>
+          </div>
         </div>
       </div>
       <div class="flex flex-col">
@@ -55,22 +57,22 @@
             <div class=" bg-slate-900 rounded-md border-2 h-28 border-gray-600 ">
               <span class="text-gray-300 m-3 text-sm">Events</span>
               <a href="/currentEvents"
-                class=" mt-5 flex justify-center items-center text-white w-[15rem] font-bold text-lg">
-                242
+                class=" mt-5 flex justify-center items-center text-white w-[15rem] sm:w-[12rem] font-bold text-lg">
+                <%= events.length %>
               </a>
             </div>
             <div class=" bg-slate-900 rounded-md border-2 h-28 border-gray-600 ">
               <span class="text-gray-300 m-3 text-sm">Tickets</span>
               <a href="/currentEvents"
-                class=" mt-5 flex justify-center items-center text-white w-[15rem] font-bold text-lg">
-                24232
+                class=" mt-5 flex justify-center items-center text-white w-[15rem] sm:w-[12rem] font-bold text-lg">
+                <%= tickets.length %>
               </a>
             </div>
             <div class=" bg-slate-900 rounded-md border-2 h-28 border-gray-600 ">
               <span class="text-gray-300 m-3 text-sm">Users</span>
               <a href="/currentEvents"
-                class=" mt-5 flex justify-center items-center text-white w-[15rem] font-bold text-lg">
-                24232
+                class=" mt-5 flex justify-center items-center text-white w-[15rem] sm:w-[12rem] font-bold text-lg">
+                <%= users.length %>
               </a>
             </div>
           </div>

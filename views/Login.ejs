@@ -30,31 +30,31 @@
 
     <div class="w-9/12 sm:w-4/12 mx-auto">
       <% if(message){%>
-        <p class="text-black py-2 bg-red-200 text-center my-2"><%= message %></p>
+        <p class="text-black py-2 bg-yellow-200 mt-4 rounded-full text-center my-2"><%= message %></p>
         <% }  %>
-        <p class="text-lg mt-12 text-white text-lg font-semibold mb-5 text-center">Welcom back</p>
+        <p class="text-lg mt-12 text-yellow-400 text-lg font-semibold mb-5 text-center">Welcom to Raffle Rush</p>
 
         <form method="post" action="/login">
             <div class="mb-3">
               <input type="text" name="username" placeholder="Email " class="border-2 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full" >
             </div>
             <div class="mb-3">
-              <input name="password" type="password" placeholder="Password " class="border-2 mb-3 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full">
-              <a href="/forgot-password" class="text-sm  text-gray-300">Reset Password</a>
+              <input name="password" type="password" placeholder="Password " class="border-2 mb-1 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full">
+              <a href="/forgot-password" class="text-sm ml-3  text-gray-300">Reset Password</a>
             </div>
-            <div class="">
-              <button type="submit" class="py-2  px-3 bg-blue-400 rounded-md text-white font-bold w-full">Login</button>
+            <div class="flex justify-center mt-2 items-center">
+              <button type="submit" class="py-2  px-3 bg-blue-400 rounded-md text-white font-bold w-11/12 ">Login</button>
             </div>
           </form>
-          <div class="flex flex-row mt-3 justify-evenly">
+          <div class="flex flex-row mt-3 justify-center items-center gap-3">
             <p class="text-sm text-gray-500">Already Having  Account ? </p>
             <a href="/register" class="underline text-white">Signup</a>
         </div>
         <div class="border-t-2   border-gray-400 mt-5"></div>
     
-        <div class="flex flex-col sm:flex-row mt-3 justify-center items-center gap-3">
-          <button  class="py-2 px-3 rounded-md bg-red-400 w-11/12 mb-2 sm:mb-0">Continue with google </button>
-          <button  class="py-2 px-3 rounded-md bg-blue-400 w-11/12">Continue with Facebok </button>
+        <div class="flex flex-col sm:flex-row mt-6 justify-center items-center gap-3">
+          <button  class="py-2 px-3 rounded-md bg-red-400 w-11/12 text-white font-semibold sm:mb-0">Login with Google </button>
+          <button  class="py-2 px-3 rounded-md text-white font-semibold  bg-blue-400 w-11/12">Login with Facebook </button>
       </div>
      
     </div>

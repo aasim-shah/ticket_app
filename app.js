@@ -17,7 +17,7 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
     secret: process.env.SECRET,
     resave: false,
@@ -28,44 +28,44 @@ app.use(passport.session());
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './public/uploads/');
+        cb(null, './public/uploads/');
     },
     filename: function (req, file, cb) {
-      cb(null, Date.now() + path.extname(file.originalname));
+        cb(null, Date.now() + path.extname(file.originalname));
     }
-  });
+});
 
 const upload = multer({ storage: storage });
 
 const transporter = nodemailer.createTransport({
     service: process.env.SERVICE,
     auth: {
-      user: process.env.USER,
-      pass: process.env.PASS
+        user: process.env.USER,
+        pass: process.env.PASS
     }
-  });
+});
 
 async function sendOrderConfirmationEmail(customerEmail, emailText, emailSubject) {
     const mailOptions = {
-      from: process.env.MYMAIL,
-      to: customerEmail,
-      subject: emailSubject,
-      text: emailText
+        from: process.env.MYMAIL,
+        to: customerEmail,
+        subject: emailSubject,
+        text: emailText
     };
-  
-    await transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log('Email sent: ' + info.response);
-      }
+
+    await transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.error(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
     });
 }
 
 
 main().catch(err => console.log(err));
 
-async function main(){
+async function main() {
     await mongoose.connect(process.env.MONG);
     const idSchema = new mongoose.Schema({
         name: String,
@@ -81,9 +81,9 @@ async function main(){
         email: String,
         phone: Number,
         photo: String,
-        accountBalance: {type : Number , default : 0},
+        accountBalance: { type: Number, default: 0 },
         resetPasswordToken: String,
-        isAdmin : Boolean,
+        isAdmin: Boolean,
         resetPasswordExpires: Number,
         verificationtToken: String,
         verified: Boolean
@@ -112,7 +112,7 @@ async function main(){
     const notificationSchema = new mongoose.Schema({
         userId: Number,
         notification: String
-    }, {timestamps : true});
+    }, { timestamps: true });
 
     userSchema.plugin(passportLocalMongoose);
 
@@ -126,57 +126,57 @@ async function main(){
     passport.serializeUser(User.serializeUser());
     passport.deserializeUser(User.deserializeUser());
 
-    app.get('/', async function(req, res){
-        res.render('Homepage', {auth: req.isAuthenticated()});
+    app.get('/', async function (req, res) {
+        res.render('Homepage', { auth: req.isAuthenticated() });
     });
 
-    app.get('/register', function(req, res){
-        res.render('Signup', {message: ""});
+    app.get('/register', function (req, res) {
+        res.render('Signup', { message: "" });
     });
 
 
-    app.get('/setup_server', async function(req, res){
+    app.get('/setup_server', async function (req, res) {
         const id = new Id({
-        name: 'ids',
-        userId: 100,
-        eventId: 101,
-        ticketId: 102
+            name: 'ids',
+            userId: 100,
+            eventId: 101,
+            ticketId: 102
         })
         await id.save()
-       res.redirect("/")
+        res.redirect("/")
     });
 
 
-    app.get('/login', function(req, res){
-        res.render('Login', {message: ""});
+    app.get('/login', function (req, res) {
+        res.render('Login', { message: "" });
     });
 
-    app.get('/loginFail', function(req, res){
-        req.logout(function(err){
-            if(err){
+    app.get('/loginFail', function (req, res) {
+        req.logout(function (err) {
+            if (err) {
                 console.log(err);
             }
         });
-        res.render('Login', {message: "Username and password does not match!"});
+        res.render('Login', { message: "Username and password does not match!" });
     });
 
-    app.get('/logout', function(req, res){
-        req.logout(function(err){
-            if(err){
+    app.get('/logout', function (req, res) {
+        req.logout(function (err) {
+            if (err) {
                 console.log(err);
             }
         });
         res.redirect('/');
     });
 
-    app.get('/verify/:token', async function(req, res){
+    app.get('/verify/:token', async function (req, res) {
         const token = req.params.token;
         const email = req.query.email;
-        const user = await User.findOne({email: email});
-        if(!user){
+        const user = await User.findOne({ email: email });
+        if (!user) {
             res.send('<h1>Invalid User!</h1>');
-        }else if(user.verificationtToken===token){
-            await User.updateOne({email: email}, {verificationtToken: '0', verified: true});
+        } else if (user.verificationtToken === token) {
+            await User.updateOne({ email: email }, { verificationtToken: '0', verified: true });
             const customerEmail = email;
             const emailText = `Your email has been verified!\n\nWith regards,\nMyple team`;
             const emailSubject = `Email Verified`;
@@ -187,15 +187,15 @@ async function main(){
             });
             await notification.save();
             res.render('emailVerified');
-        }else{
+        } else {
             res.send('<h1>Invalid Token!</h1>');
         }
     });
 
-    app.get('/resendEmailVerify/:email', async function(req, res){
+    app.get('/resendEmailVerify/:email', async function (req, res) {
         const verificationtToken = crypto.randomBytes(32).toString('hex');
         const email = req.params.email;
-        await User.updateOne({email: email}, {verificationtToken: verificationtToken});
+        await User.updateOne({ email: email }, { verificationtToken: verificationtToken });
         const verificationLink = `${req.protocol}://${req.headers.host}/verify/${verificationtToken}?email=${email}`;
         const customerEmail = email;
         const emailSubject = `Resent Verification Mail`;
@@ -205,57 +205,62 @@ async function main(){
     });
 
     // Forgot Password route
-    app.get('/forgot-password', function(req, res){
-        res.render('ResetPassword', {message: "" , step : 1});
+    app.get('/forgot-password', function (req, res) {
+        res.render('ResetPassword', { message: "", step: 1 });
     });
 
-    app.get('/reset-password', async function(req, res){
+    app.get('/reset-password', async function (req, res) {
         const token = req.query.token;
-        const id = Number(req.query.id);
-        const user = await User.findOne({_id: id});
-        if (!user) {
-            res.render('ResetPassword', {message: 'Invalid Token!' , step : 1});
-        }
-        else if (Number(user.resetPasswordExpires) < Date.now()) {
-            res.render('ResetPassword', { message: 'Token has expired'  , step : 1});
-        }else{
-            res.render('ResetPassword', {email: user.email, token: token  , message : ""  , step : 3});
-        }
-    });
-
-    app.get('/profile', async function(req, res){
-        if(req.isAuthenticated()){
-            res.render('Profile', {user: req.user});
-        }else{
+        if (token) {
+            const id = Number(req.query.id);
+            console.log({ id })
+            const user = await User.findOne({ _id: id });
+            if (!user) {
+                res.render('ResetPassword', { message: 'Invalid Token!', step: 1 });
+            }
+            else if (Number(user.resetPasswordExpires) < Date.now()) {
+                res.render('ResetPassword', { message: 'Token has expired', step: 1 });
+            } else {
+                res.render('ResetPassword', { email: user.email, token: token, message: "", step: 3 });
+            }
+        } else {
             res.redirect("/login")
         }
     });
 
-    app.get('/currentEvents', async function(req, res){
-        if(req.isAuthenticated()){
-            const events = await Event.find({eventEnd: false});
-            console.log({events})
-            res.render('Upcoming', {events: events , moment});
-
-        }else{
+    app.get('/profile', async function (req, res) {
+        if (req.isAuthenticated()) {
+            res.render('Profile', { user: req.user });
+        } else {
             res.redirect("/login")
         }
     });
 
-    app.get('/pastEvents', async function(req, res){
-        if(req.isAuthenticated()){
-            const events = await Event.find({eventEnd: true});
-            res.render('pastEvents', {events: events, user: req.user});
-            
-        }else{
+    app.get('/currentEvents', async function (req, res) {
+        if (req.isAuthenticated()) {
+            const events = await Event.find({ eventEnd: false });
+            console.log({ events })
+            res.render('Upcoming', { events: events, moment });
+
+        } else {
             res.redirect("/login")
         }
     });
 
-    app.get('/addToCart/:eventid/:ticketvalue', async function(req, res){
+    app.get('/pastEvents', async function (req, res) {
+        if (req.isAuthenticated()) {
+            const events = await Event.find({ eventEnd: true });
+            res.render('pastEvents', { events: events, user: req.user });
+
+        } else {
+            res.redirect("/login")
+        }
+    });
+
+    app.get('/addToCart/:eventid/:ticketvalue', async function (req, res) {
         console.log(req.params)
-        if(req.isAuthenticated()){
-            const ids = await Id.findOne({name: 'ids'});
+        if (req.isAuthenticated()) {
+            const ids = await Id.findOne({ name: 'ids' });
             const ticket = new Ticket({
                 _id: Number(ids.ticketId),
                 userId: Number(req.user._id),
@@ -264,156 +269,161 @@ async function main(){
                 bought: false
             });
             await ticket.save();
-            ids.ticketId = Number(ids.ticketId)+3;
+            ids.ticketId = Number(ids.ticketId) + 3;
             await ids.save();
             res.redirect('/cart');
-        }else{
+        } else {
             res.redirect('/login');
         }
     });
 
 
-    app.get('/cart', async function(req, res){
-        if(req.isAuthenticated()){
-            const tickets = await Ticket.find({userId: Number(req.user._id), bought: false});
-            res.render('cart', {tickets: tickets, user: req.user});
-            
-        }else{
+    app.get('/cart', async function (req, res) {
+        if (req.isAuthenticated()) {
+            const tickets = await Ticket.find({ userId: Number(req.user._id), bought: false });
+            res.render('cart', { tickets: tickets, user: req.user });
+
+        } else {
             res.redirect('/login');
         }
     });
 
-    app.get('/deleteTicket/:ticketid', async function(req, res){
-        await Ticket.deleteOne({_id: Number(req.params.ticketid)});
-        res.redirect('/cart');
-    });
-    app.get('/deleteEvent/:eventId', async function(req, res){
-        if(req.isAuthenticated() && req.user.isAdmin){
-        await Event.deleteOne({_id: Number(req.params.eventId)});
-        res.redirect('/adminHome');
-        }else{
+    app.get('/deleteTicket/:ticketid', async function (req, res) {
+        if (req.isAuthenticated() && req.user.isAdmin) {
+
+            await Ticket.deleteOne({ _id: Number(req.params.ticketid) });
+            res.redirect('/cart');
+        } else {
             res.redirect("/admin")
         }
     });
-    app.get('/deleteUser/:userId', async function(req, res){
-        if(req.isAuthenticated() && req.user.isAdmin){
-        await User.deleteOne({_id: Number(req.params.userId)});
-        res.redirect('/adminHome');
-        }else{
+    app.get('/deleteEvent/:eventId', async function (req, res) {
+        if (req.isAuthenticated() && req.user.isAdmin) {
+            await Event.deleteOne({ _id: Number(req.params.eventId) });
+            res.redirect('/adminHome');
+        } else {
+            res.redirect("/admin")
+        }
+    });
+    app.get('/deleteUser/:userId', async function (req, res) {
+        if (req.isAuthenticated() && req.user.isAdmin) {
+            await User.deleteOne({ _id: Number(req.params.userId) });
+            res.redirect('/adminHome');
+        } else {
             res.redirect("/admin")
         }
     });
 
-    
-    app.get('/event/:eventId', async function(req, res){
-        // if(req.isAuthenticated()){
-            const eventDetails = await Event.findOne({_id: Number(req.params.eventId)});
-            const tickets = await Ticket.find({eventId: req.params.eventId});
-            const array1 = Array.from({ length: 25 }, (_, i) => i + 1); // [1, 2, 3, ..., 25]
 
-            console.log({array1})
-            // res.render('/EventDetails', {eventDetails: eventDetails, tickets: tickets, user: req.user});
-            console.log({tickets})
-            res.render('EnterEvent', {eventDetails: eventDetails, tickets: tickets  , array1 });
-            
+    app.get('/event/:eventId', async function (req, res) {
+        // if(req.isAuthenticated()){
+        const eventDetails = await Event.findOne({ _id: Number(req.params.eventId) });
+        const tickets = await Ticket.find({ eventId: req.params.eventId });
+        const array1 = Array.from({ length: 25 }, (_, i) => i + 1); // [1, 2, 3, ..., 25]
+
+        console.log({ array1 })
+        // res.render('/EventDetails', {eventDetails: eventDetails, tickets: tickets, user: req.user});
+        console.log({ tickets })
+        res.render('EnterEvent', { eventDetails: eventDetails, tickets: tickets, array1 });
+
         // }
     });
 
-    app.get('/eventDraw/:eventId', async function(req, res){
+    app.get('/eventDraw/:eventId', async function (req, res) {
         // if(req.isAuthenticated()){
-            const eventDetails = await Event.findOne({_id: Number(req.params.eventId)});
-            // res.render('/EventDetails', {eventDetails: eventDetails, user: req.user});
-            res.render('EventDetails', {eventDetails: eventDetails});
-            
+        const eventDetails = await Event.findOne({ _id: Number(req.params.eventId) });
+        // res.render('/EventDetails', {eventDetails: eventDetails, user: req.user});
+        res.render('EventDetails', { eventDetails: eventDetails });
+
         // }
     });
 
-    app.get('/settings', async function(req, res){
-        if(req.isAuthenticated()){
-            res.render('/settings', {user: req.user});
-            
+    app.get('/settings', async function (req, res) {
+        if (req.isAuthenticated()) {
+            res.render('/settings', { user: req.user });
+
         }
     });
 
-    app.get('/notifications', async function(req, res){
-        if(req.isAuthenticated()){
-            const notifications = await Notification.find({userId: Number(req.user._id)});
-            res.render('notifications', {user: req.user, notifications: notifications , moment});
-        }else{
+    app.get('/notifications', async function (req, res) {
+        if (req.isAuthenticated()) {
+            const notifications = await Notification.find({ userId: Number(req.user._id) });
+            res.render('notifications', { user: req.user, notifications: notifications, moment });
+        } else {
             res.redirect("/login")
         }
     });
 
-    app.get('/balance', async function(req, res){
-        if(req.isAuthenticated()){
-            res.render('balance', {user: req.user});
-            
+    app.get('/balance', async function (req, res) {
+        if (req.isAuthenticated()) {
+            res.render('balance', { user: req.user });
+
         }
     });
 
-    app.get('/admin', function(req, res){
-        res.render('adminLogin' , {message : ""});
+    app.get('/admin', function (req, res) {
+        res.render('adminLogin', { message: "" });
     });
 
-    app.get('/adminLoginFail', function(req, res){
-        req.logout(function(err){
-            if(err){
+    app.get('/adminLoginFail', function (req, res) {
+        req.logout(function (err) {
+            if (err) {
                 console.log(err);
             }
         });
-        res.render('adminLogin', {message: "Username and password does not match!"});
+        res.render('adminLogin', { message: "Username and password does not match!" });
     });
 
-    app.get('/adminLogout', function(req, res){
-        req.logout(function(err){
-            if(err){
+    app.get('/adminLogout', function (req, res) {
+        req.logout(function (err) {
+            if (err) {
                 console.log(err);
             }
         });
         res.redirect('/');
 
 
-        
+
     });
 
-    app.get('/adminHome', async function(req, res){
+    app.get('/adminHome', async function (req, res) {
         console.log(req.user)
-        if(req.isAuthenticated() && req.user.isAdmin){
+        if (req.isAuthenticated() && req.user.isAdmin) {
             const events = await Event.find();
             const users = await User.find();
             const tickets = await Ticket.find();
-            res.render('adminHome', {events: events, users: users, tickets: tickets , moment});
-        }else{
+            res.render('adminHome', { events: events, users: users, tickets: tickets, moment });
+        } else {
             res.redirect('/');
         }
     });
 
-    app.get('/addEvent', async function(req, res){
+    app.get('/addEvent', async function (req, res) {
         // if(req.isAuthenticated()){
-            res.render('addEvent');
-            
+        res.render('addEvent');
+
         // }
     });
 
-    app.get('/endEvent/:eventId', async function(req, res){
-        if(req.isAuthenticated()){
-            const event = await Event.findOne({_id: Number(req.params.eventId)});
-            const w = Math.random()*(event.userIds.length);
+    app.get('/endEvent/:eventId', async function (req, res) {
+        if (req.isAuthenticated()) {
+            const event = await Event.findOne({ _id: Number(req.params.eventId) });
+            const w = Math.random() * (event.userIds.length);
             const fixedW = Math.ceil(w);
-            console.log({fixedW})
-            console.log({users : event.userIds})
-            console.log({winnerValue : event.ticketValue[fixedW]})
-            console.log({users1 : event.userIds[1]})
+            console.log({ fixedW })
+            console.log({ users: event.userIds })
+            console.log({ winnerValue: event.ticketValue[fixedW] })
+            console.log({ users1: event.userIds[1] })
             console.log('winneris' + event.userIds[fixedW])
             const winnerId = Math.ceil(event.userIds[fixedW]);
             const winnerValue = Number(event.ticketValue[fixedW]);
-            await Event.updateOne({_id: Number(req.params.eventId)}, {eventEnd: true, winnerId: winnerId});
-            const winner = await User.findOne({_id: winnerId})
-            winner.accountBalance = Number(winner.accountBalance)+winnerValue;
+            await Event.updateOne({ _id: Number(req.params.eventId) }, { eventEnd: true, winnerId: winnerId });
+            const winner = await User.findOne({ _id: winnerId })
+            winner.accountBalance = Number(winner.accountBalance) + winnerValue;
             await winner.save();
             let outputArray = Array.from(new Set(event.userIds));
-            for(let i = 0; i<outputArray.length; i++){
-                if(Number(outputArray[i])===winnerId){
+            for (let i = 0; i < outputArray.length; i++) {
+                if (Number(outputArray[i]) === winnerId) {
                     const notification = new Notification({
                         userId: Number(winnerId),
                         notification: `Event ${event.name} has ended. You have won ${winnerValue} balance!`
@@ -423,7 +433,7 @@ async function main(){
                     const emailSubject = `Winner of ${event.name}`;
                     const emailText = `Dear ${req.body.name},\nYou have won the event and have been awarded a balance of ${winnerValue}\n\nWith regards,\nGreat Escape team`;
                     sendOrderConfirmationEmail(customerEmail, emailText, emailSubject);
-                }else{
+                } else {
                     const notification = new Notification({
                         userId: Number(outputArray[i]),
                         notification: `Event ${event.name} has ended. You have not won the event!`
@@ -431,16 +441,13 @@ async function main(){
                     await notification.save();
                 }
             }
-            await Ticket.deleteMany({eventId: Number(req.params.eventId), bought: false});
+            await Ticket.deleteMany({ eventId: Number(req.params.eventId), bought: false });
             res.redirect('/adminHome');
-            
-        }else{
+
+        } else {
             res.redirect('/admin');
         }
     });
-    
-
-    
 
 
 
@@ -474,59 +481,62 @@ async function main(){
 
 
 
-    app.post('/register', upload.single('image'), async function(req, res){
+
+
+
+    app.post('/register', upload.single('image'), async function (req, res) {
         console.log(req.body)
-        let temp = await Id.findOne({name: "ids"});
-       
+        let temp = await Id.findOne({ name: "ids" });
+
         const verificationtTokenn = await crypto.randomBytes(32).toString('hex');
-        User.register({username: req.body.email, _id: Number(temp.userId), name: req.body.firstName+" "+ req.body.lastName, photo: req.file.filename, phone: Number(req.body.phone), email: req.body.email, accountbalance: 0, resetPasswordToken: 1, resetPasswordExpires: '1', verificationtToken : verificationtTokenn , verified: false}, req.body.password, async function(err, user){
-            console.log({user})
-            if(err){
-                console.log({err})
-                res.render('Signup', {message: "Email already exists!"});
-            }else{
-                await Id.updateOne({name: "ids"}, {userId: Number(temp.userId)+4});
+        User.register({ username: req.body.email, _id: Number(temp.userId), name: req.body.firstName + " " + req.body.lastName, photo: req.file.filename, phone: Number(req.body.phone), email: req.body.email, accountbalance: 0, resetPasswordToken: 1, resetPasswordExpires: '1', verificationtToken: verificationtTokenn, verified: false }, req.body.password, async function (err, user) {
+            console.log({ user })
+            if (err) {
+                console.log({ err })
+                res.render('Signup', { message: "Email already exists!" });
+            } else {
+                await Id.updateOne({ name: "ids" }, { userId: Number(temp.userId) + 4 });
                 const verificationLink = `${req.protocol}://${req.headers.host}/verify/${verificationtTokenn}?email=${req.body.email}`;
                 const customerEmail = req.body.email;
                 const emailSubject = `User Registered`;
                 const emailText = `Dear ${req.body.name},\nYou have successfully registered on Great Escape.\nPlease follow the link to verify your email: ${verificationLink}\n\nWith regards,\nGreat Escape team`;
                 sendOrderConfirmationEmail(customerEmail, emailText, emailSubject);
-                res.redirect('/login');
+                res.render('Login' , {message : "Your Account has been created succesuly !"})
             }
         });
     });
 
-    app.post('/login', async function(req, res){
-        const temp = await User.findOne({username: req.body.username});
+    app.post('/login', async function (req, res) {
+        const temp = await User.findOne({ username: req.body.username });
         const user = new User({
             username: req.body.username,
             password: req.body.password
         });
-        if(temp){
-            if(temp.verified){
-                req.login(user, function(err){
-                    if(err){
+        if (temp) {
+            if (temp.verified) {
+                req.login(user, function (err) {
+                    if (err) {
                         console.log(err);
-                    }else{
-                        passport.authenticate('local', {failureRedirect: '/loginFail'})(req, res, function(){
-                            if(req.user.isAdmin){
+                    } else {
+                        passport.authenticate('local', { failureRedirect: '/loginFail' })(req, res, function () {
+                            if (req.user.isAdmin) {
                                 res.redirect('/adminHome');
-                            }else{
+                            } else {
                                 res.redirect('/');
                             }
                         });
                     }
                 });
-            }else{
-                res.render('emailUnverified', {email: req.body.username});
+            } else {
+                res.render('emailUnverified', { email: req.body.username });
             }
-        }else{
+        } else {
             res.redirect('/loginFail');
         }
     });
 
-    app.post('/update', upload.single('image'), async function(req,res){
-        await User.updateOne({_id: req.user._id}, {name: req.body.name, phone: Number(req.body.phone), photo: req.file.filename});
+    app.post('/update', upload.single('image'), async function (req, res) {
+        await User.updateOne({ _id: req.user._id }, { name: req.body.name, phone: Number(req.body.phone), photo: req.file.filename });
         const notification = new Notification({
             userId: Number(req.user._id),
             notification: `Your details has been updated!`
@@ -538,13 +548,13 @@ async function main(){
         sendOrderConfirmationEmail(customerEmail, emailText, emailSubject);
         res.redirect('/');
     });
-    
+
     // Handle password recovery request
-    app.post('/forgot-password', async function(req, res){
+    app.post('/forgot-password', async function (req, res) {
         const email = req.body.email;
-        const user = await User.findOne({email: email});
+        const user = await User.findOne({ email: email });
         if (!user) {
-            res.render('ResetPassword', {message: 'User not found!'  , step : 1});
+            res.render('ResetPassword', { message: 'User not found!', step: 1 });
         }
         const token = crypto.randomBytes(20).toString('hex');
         user.resetPasswordToken = token;
@@ -555,13 +565,13 @@ async function main(){
         const resetUrl = `${req.protocol}://${req.headers.host}/reset-password?token=${token}&id=${user._id}`;
         const emailText = `Please click the link to reset the password:\n${resetUrl}`;
         sendOrderConfirmationEmail(customerEmail, emailText, emailSubject);
-        res.render('ResetPassword', {message: 'Email sent with instructions!' , step : 0});
+        res.render('ResetPassword', { message: 'Email sent with instructions!', step: 0 });
     });
-    
+
     app.post('/reset-password', async (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
-        const user = await User.findOne({email: email});
+        const user = await User.findOne({ email: email });
         if (!user) {
             return res.status(400).json({ message: 'Invalid token' });
         }
@@ -581,82 +591,82 @@ async function main(){
             notification: `Your password has been successfully reset!`
         });
         await notification.save();
-        res.render('login', {message: 'Password reset successful!'});
+        res.render('login', { message: 'Password reset successful!' });
     });
 
-    app.get('/buyTickets', async function(req, res){
-        res.render('payment', {user: req.user, key: process.env.STRIPEPUBLISHABLEKEY});
+    app.get('/buyTickets', async function (req, res) {
+        res.render('payment', { user: req.user, key: process.env.STRIPEPUBLISHABLEKEY, key2: process.env.STRIPEACCOUNTID });
     });
-    app.post('/buyTickets', async function(req, res){
-        res.render('payment', {user: req.user, key: process.env.STRIPEPUBLISHABLEKEY});
+    app.post('/buyTickets', async function (req, res) {
+        res.render('payment', { user: req.user, key: process.env.STRIPEPUBLISHABLEKEY, key2: process.env.STRIPEACCOUNTID });
     });
 
-    app.post('/processPayment', async function(req, res){
+    app.post('/processPayment', async function (req, res) {
         try {
             const paymentMethodId = req.body.paymentMethodId;
             const name = req.body.name;
-            const tickets = await Ticket.find({userId: Number(req.user._id)});
+            const tickets = await Ticket.find({ userId: Number(req.user._id) });
             const price = 0;
-            for(let i = 0; i<tickets.length; i++){
+            for (let i = 0; i < tickets.length; i++) {
                 price = price + Number(tickets[i].value);
             }
             // Create a payment intent using the payment method
             const paymentIntent = await stripe.paymentIntents.create({
-              amount: price*100, // Amount in cents
-              currency: 'usd',
-              payment_method: paymentMethodId,
-              confirm: true,
-              description: `Payment from ${name}`,
+                amount: price * 100, // Amount in cents
+                currency: 'usd',
+                payment_method: paymentMethodId,
+                confirm: true,
+                description: `Payment from ${name}`,
             });
             // Payment succeeded
-            for(let i = 0; i<tickets.length; i++){
-                const event = await Event.findOne({_id: Number(tickets[i].eventId)});
+            for (let i = 0; i < tickets.length; i++) {
+                const event = await Event.findOne({ _id: Number(tickets[i].eventId) });
                 let l = Number(tickets[i].value);
-                for(let j = 0; j<l; j++){
+                for (let j = 0; j < l; j++) {
                     event.userIds.push(Number(tickets[i].userId));
                     event.ticketValue.push(Number(tickets[i].value));
                 }
                 await event.save();
-                await Ticket.updateOne({_id: Number(tickets[i]._id)}, {bought: true});
+                await Ticket.updateOne({ _id: Number(tickets[i]._id) }, { bought: true });
             }
             const customerEmail = req.body.buyer.email;
             const emailText = `Hello sir/ma'am\nYou have succesfully placed an order for tickets.\n\nWith regards,\nGreat Escape`;
             const emailSubject = `Order Placed`;
             sendOrderConfirmationEmail(customerEmail, emailText, emailSubject);
-            res.render('payment_success_failure', {message1: "PAYMENT SUCCESSFUL", message2: "Please check your email for details!"});
-          } catch (error) {
+            res.render('payment_success_failure', { message1: "PAYMENT SUCCESSFUL", message2: "Please check your email for details!" });
+        } catch (error) {
             // Payment failed
-            res.render('payment_success_failure', {message1: "PAYMENT FAILED", message2: "Please try again!"});
-          }
+            res.render('payment_success_failure', { message1: "PAYMENT FAILED", message2: "Please try again!" });
+        }
     });
 
 
 
-    app.post('/adminLogin', async function(req, res){
-        const temp = await User.findOne({_id: 99});
+    app.post('/adminLogin', async function (req, res) {
+        const temp = await User.findOne({ _id: 99 });
         const user = new User({
             username: req.body.username,
             password: req.body.password
         });
-        if(temp){
-                req.login(user, function(err){
-                    if(err){
-                        console.log(err);
-                    }else{
-                        passport.authenticate('local', {failureRedirect: '/loginFail'})(req, res, function(){
-                            res.redirect('/adminHome');
-                        });
-                    }
-                });
-        }else{
+        if (temp) {
+            req.login(user, function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    passport.authenticate('local', { failureRedirect: '/loginFail' })(req, res, function () {
+                        res.redirect('/adminHome');
+                    });
+                }
+            });
+        } else {
             res.redirect('/adminLoginFail');
         }
     });
 
-    app.post('/addEvent', async function(req, res){
-        const ids = await Id.findOne({name: 'ids'});
+    app.post('/addEvent', async function (req, res) {
+        const ids = await Id.findOne({ name: 'ids' });
         console.log(req.body)
-        console.log({ids})
+        console.log({ ids })
         const startDate = new Date(req.body.eventStarts);
         const endDate = new Date(req.body.eventEnds);
         const event = new Event({
@@ -669,13 +679,18 @@ async function main(){
             userIds: [0]
         });
         await event.save();
-        await Id.updateOne({name: 'ids'}, {eventId: Number(ids.eventId)+4});
+        await Id.updateOne({ name: 'ids' }, { eventId: Number(ids.eventId) + 4 });
 
-        
+
         res.redirect('/addEvent');
     });
+    app.get("/*" , (req , res) =>{
+        res.render("pageNotFound")
+    })
 }
 
-app.listen(process.env.PORT || 5000 , () =>{
+
+
+app.listen(process.env.PORT || 5000, () => {
     console.log("server is running")
 });

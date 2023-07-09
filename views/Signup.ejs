@@ -30,7 +30,7 @@
   <%- include("./partials/sidebar") %>
   <div class="w-9/12 sm:w-5/12 mx-auto">
     <% if(message){%>
-      <p class="text-black py-2 bg-red-200 text-center my-2">
+      <p class="text-black py-2 bg-yellow-200 rounded-full mt-4 text-center my-2">
         <%= message %>
       </p>
       <% } %>
@@ -61,21 +61,21 @@
               class=" border-2 text-white  bg-slate-900 rounded-md border-gray-400 py-2 px-3 w-full">
           </div>
 
-          <div class="">
-            <button type="submit" class="py-2  px-3 bg-blue-400 rounded-md text-white font-bold w-full  ">R E G I S T E
+          <div class="flex justify-center items-center mt-6">
+            <button type="submit" class="py-2  px-3 bg-blue-400 rounded-md text-white font-bold w-11/12  ">R E G I S T E
               R</button>
           </div>
         </form>
-        <div class="flex flex-row mt-3 justify-evenly">
+        <div class="flex flex-row mt-3 justify-center items-center gap-3">
           <p class="text-sm text-gray-500">Not having Account ? </p>
           <a href="/login" class="underline text-white">Login</a>
         </div>
 
         <div class="border-t-2   border-gray-400 mt-5"></div>
 
-        <div class="flex flex-col sm:flex-row mt-3 justify-center items-center gap-3">
-          <button  class="py-2 px-3 rounded-md bg-red-400 w-11/12 ">Continue with google </button>
-          <button  class="py-2 px-3 rounded-md mt-3 bg-blue-400 w-11/12">Continue with Facebok </button>
+        <div class="flex flex-col sm:flex-row mt-6 justify-center items-center gap-3">
+          <button  class="py-2 px-3 rounded-md bg-red-400 w-11/12  text-white font-semibold ">Signup with Google </button>
+          <button  class="py-2 px-3 rounded-md bg-blue-400 text-white font-semibold  w-11/12">Signup with Facebook </button>
       </div>
      
   </div>
