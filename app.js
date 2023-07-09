@@ -81,7 +81,7 @@ async function main(){
         email: String,
         phone: Number,
         photo: String,
-        accountBalance: Number,
+        accountBalance: {type : Number , default : 0},
         resetPasswordToken: String,
         isAdmin : Boolean,
         resetPasswordExpires: Number,
@@ -287,6 +287,22 @@ async function main(){
         await Ticket.deleteOne({_id: Number(req.params.ticketid)});
         res.redirect('/cart');
     });
+    app.get('/deleteEvent/:eventId', async function(req, res){
+        if(req.isAuthenticated() && req.user.isAdmin){
+        await Event.deleteOne({_id: Number(req.params.eventId)});
+        res.redirect('/adminHome');
+        }else{
+            res.redirect("/admin")
+        }
+    });
+    app.get('/deleteUser/:userId', async function(req, res){
+        if(req.isAuthenticated() && req.user.isAdmin){
+        await User.deleteOne({_id: Number(req.params.userId)});
+        res.redirect('/adminHome');
+        }else{
+            res.redirect("/admin")
+        }
+    });
 
     
     app.get('/event/:eventId', async function(req, res){
@@ -382,9 +398,15 @@ async function main(){
     app.get('/endEvent/:eventId', async function(req, res){
         if(req.isAuthenticated()){
             const event = await Event.findOne({_id: Number(req.params.eventId)});
-            const w = Math.random()*(event.userIds.length)+1;
-            const winnerId = Number(event.userIds[w]);
-            const winnerValue = Number(event.ticketValue[w]);
+            const w = Math.random()*(event.userIds.length);
+            const fixedW = Math.ceil(w);
+            console.log({fixedW})
+            console.log({users : event.userIds})
+            console.log({winnerValue : event.ticketValue[fixedW]})
+            console.log({users1 : event.userIds[1]})
+            console.log('winneris' + event.userIds[fixedW])
+            const winnerId = Math.ceil(event.userIds[fixedW]);
+            const winnerValue = Number(event.ticketValue[fixedW]);
             await Event.updateOne({_id: Number(req.params.eventId)}, {eventEnd: true, winnerId: winnerId});
             const winner = await User.findOne({_id: winnerId})
             winner.accountBalance = Number(winner.accountBalance)+winnerValue;
@@ -413,7 +435,7 @@ async function main(){
             res.redirect('/adminHome');
             
         }else{
-            res.redirect('/adminLogin');
+            res.redirect('/admin');
         }
     });
     
