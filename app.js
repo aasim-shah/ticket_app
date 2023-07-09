@@ -409,10 +409,11 @@ async function main(){
                     await notification.save();
                 }
             }
+            await Ticket.deleteMany({eventId: Number(req.params.eventId), bought: false});
             res.redirect('/adminHome');
             
         }else{
-            res.redirect("/login")
+            res.redirect('/adminLogin');
         }
     });
     
@@ -453,16 +454,8 @@ async function main(){
 
     app.post('/register', upload.single('image'), async function(req, res){
         console.log(req.body)
-        // let temp = await Id.findOne({name: req.body.username});
         let temp = await Id.findOne({name: "ids"});
-        // if(!temp){
-        //     const newTemp = new Id({
-        //         name : req.body.email,
-        //         userId : 8080,
-        //     })
-        //   temp = await newTemp.save()
-        // }
-        // console.log({temp})
+       
         const verificationtTokenn = await crypto.randomBytes(32).toString('hex');
         User.register({username: req.body.email, _id: Number(temp.userId), name: req.body.firstName+" "+ req.body.lastName, photo: req.file.filename, phone: Number(req.body.phone), email: req.body.email, accountbalance: 0, resetPasswordToken: 1, resetPasswordExpires: '1', verificationtToken : verificationtTokenn , verified: false}, req.body.password, async function(err, user){
             console.log({user})
@@ -580,7 +573,7 @@ async function main(){
         try {
             const paymentMethodId = req.body.paymentMethodId;
             const name = req.body.name;
-            const tickets = req.body.tickets;
+            const tickets = await Ticket.find({userId: Number(req.user._id)});
             const price = 0;
             for(let i = 0; i<tickets.length; i++){
                 price = price + Number(tickets[i].value);
@@ -588,7 +581,7 @@ async function main(){
             // Create a payment intent using the payment method
             const paymentIntent = await stripe.paymentIntents.create({
               amount: price*100, // Amount in cents
-              currency: 'inr',
+              currency: 'usd',
               payment_method: paymentMethodId,
               confirm: true,
               description: `Payment from ${name}`,
@@ -602,6 +595,7 @@ async function main(){
                     event.ticketValue.push(Number(tickets[i].value));
                 }
                 await event.save();
+                await Ticket.updateOne({_id: Number(tickets[i]._id)}, {bought: true});
             }
             const customerEmail = req.body.buyer.email;
             const emailText = `Hello sir/ma'am\nYou have succesfully placed an order for tickets.\n\nWith regards,\nGreat Escape`;
@@ -613,6 +607,7 @@ async function main(){
             res.render('payment_success_failure', {message1: "PAYMENT FAILED", message2: "Please try again!"});
           }
     });
+
 
 
     app.post('/adminLogin', async function(req, res){
