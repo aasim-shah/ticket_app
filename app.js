@@ -18,6 +18,8 @@ const app = express();
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json()); // for parsing application/json
+
 app.use(session({
     secret: process.env.SECRET,
     resave: false,
@@ -603,9 +605,13 @@ async function main() {
 
     app.post('/processPayment', async function (req, res) {
         try {
+            console.log(req.body)
+            
             const paymentMethodId = req.body.paymentMethodId;
+            console.log({paymentMethodId})
             const name = req.body.name;
             const tickets = await Ticket.find({ userId: Number(req.user._id) });
+            console.log({tickets})
             const price = 0;
             for (let i = 0; i < tickets.length; i++) {
                 price = price + Number(tickets[i].value);
@@ -633,10 +639,12 @@ async function main() {
             const emailText = `Hello sir/ma'am\nYou have succesfully placed an order for tickets.\n\nWith regards,\nGreat Escape`;
             const emailSubject = `Order Placed`;
             sendOrderConfirmationEmail(customerEmail, emailText, emailSubject);
-            res.render('payment_success_failure', { message1: "PAYMENT SUCCESSFUL", message2: "Please check your email for details!" });
+            // res.render('payment_success_failure', { message1: "PAYMENT SUCCESSFUL", message2: "Please check your email for details!" });
+            res.json({success : true})
         } catch (error) {
             // Payment failed
-            res.render('payment_success_failure', { message1: "PAYMENT FAILED", message2: "Please try again!" });
+            // res.render('payment_success_failure', { message1: "PAYMENT FAILED", message2: "Please try again!" });
+            res.json({success : false})
         }
     });
 
