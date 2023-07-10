@@ -156,21 +156,24 @@ async function main() {
                     verified: true
                 });
                 await user.save();
-                req.login(user, function(err){
-                    if(err){
-                        console.log(err);
-                    }else{
-                        return done(err, user);
-                    }
-                });
+                // req.login(user, function(err){
+                //     if(err){
+                //         console.log(err);
+                //     }else{
+                //         return done(err, user);
+                //     }
+                // });
+                return done(err , user)
             }else{
-                req.login(user, function(err){
-                    if(err){
-                        console.log(err);
-                    }else{
-                        return done(err, user);
-                    }
-                });
+                // req.login(user, function(err){
+                //     if(err){
+                //         console.log(err);
+                //     }else{
+                //         return done(err, user);
+                //     }
+                // });
+                return done(err , user)
+
             }
         }
     ));
@@ -250,7 +253,10 @@ async function main() {
 
 
     app.get('/auth/google',
-    passport.authenticate('google', { scope: ['profile' ,"email"] }));
+    passport.authenticate('google', { scope: ['profile' ,"email"] })
+    ,(req ,res)=>{
+        console.log("first")
+    });
   
   app.get('/auth/google/callback', 
     passport.authenticate('google', { failureRedirect: '/login' }),
