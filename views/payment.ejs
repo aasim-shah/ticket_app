@@ -138,7 +138,9 @@
             errorElement.textContent = result.error.message;
           } else {
             axios.post('/processPayment', {
-              paymentMethodId: result.paymentMethod.id
+              paymentMethodId: result.paymentMethod.id,
+              userId : "<%= user._id %>",
+              email : "<%= user.email %>"
             }, {
               headers: {
                 'Content-Type': 'application/json'
@@ -147,7 +149,7 @@
               .then(function (data) {
                 console.log({data})
                 // Handle the response from your server
-                if (data.success) {
+                if (data.data.success) {
                   // Payment succeeded, show a success message to the user
                   var successMessage = document.createElement('div');
                   successMessage.classList.add('success-message');

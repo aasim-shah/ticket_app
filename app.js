@@ -597,25 +597,29 @@ async function main() {
     });
 
     app.get('/buyTickets', async function (req, res) {
-        res.render('payment', { user: req.user, key: process.env.STRIPEPUBLISHABLEKEY, key2: process.env.STRIPEACCOUNTID });
+        if(req.isAuthenticated()){
+            res.render('payment', { user: req.user, key: process.env.STRIPEPUBLISHABLEKEY, key2: process.env.STRIPEACCOUNTID });
+        }else{
+            res.redirect("/login")
+        }
     });
     app.post('/buyTickets', async function (req, res) {
         res.render('payment', { user: req.user, key: process.env.STRIPEPUBLISHABLEKEY, key2: process.env.STRIPEACCOUNTID });
     });
 
     app.post('/processPayment', async function (req, res) {
-        try {
+            try {
             console.log(req.body)
             
             const paymentMethodId = req.body.paymentMethodId;
-            console.log({paymentMethodId})
             const name = req.body.name;
-            const tickets = await Ticket.find({ userId: Number(req.user._id) });
+            const tickets = await Ticket.find({ userId: Number(req.body.userId) , bought : false });
             console.log({tickets})
-            const price = 0;
+            let price = 0;
             for (let i = 0; i < tickets.length; i++) {
                 price = price + Number(tickets[i].value);
             }
+            console.log({price})
             // Create a payment intent using the payment method
             const paymentIntent = await stripe.paymentIntents.create({
                 amount: price * 100, // Amount in cents
@@ -624,6 +628,7 @@ async function main() {
                 confirm: true,
                 description: `Payment from ${name}`,
             });
+            console.log({paymentIntent})
             // Payment succeeded
             for (let i = 0; i < tickets.length; i++) {
                 const event = await Event.findOne({ _id: Number(tickets[i].eventId) });
@@ -635,17 +640,19 @@ async function main() {
                 await event.save();
                 await Ticket.updateOne({ _id: Number(tickets[i]._id) }, { bought: true });
             }
-            const customerEmail = req.body.buyer.email;
+            // const customerEmail = req.body.buyer.email;
+            const customerEmail = req.body.email;
             const emailText = `Hello sir/ma'am\nYou have succesfully placed an order for tickets.\n\nWith regards,\nGreat Escape`;
             const emailSubject = `Order Placed`;
             sendOrderConfirmationEmail(customerEmail, emailText, emailSubject);
-            // res.render('payment_success_failure', { message1: "PAYMENT SUCCESSFUL", message2: "Please check your email for details!" });
             res.json({success : true})
         } catch (error) {
             // Payment failed
-            // res.render('payment_success_failure', { message1: "PAYMENT FAILED", message2: "Please try again!" });
+            console.log("failed")
+            console.log({error})
             res.json({success : false})
         }
+      
     });
 
 
