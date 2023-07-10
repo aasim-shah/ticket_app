@@ -831,12 +831,24 @@ async function main() {
 
         res.redirect('/addEvent');
     });
+
+
+
+
+    app.get('/terms', async function (req, res) {
+        res.render('termsAndServices.ejs');
+    });
+
     app.get("/*" , (req , res) =>{
         res.render("pageNotFound")
     })
 }
 
 
+
+    app.get('/', async function (req, res) {
+        res.render('Homepage', { auth: req.isAuthenticated() });
+    });
 
 app.listen(process.env.PORT || 5000, () => {
     console.log("server is running")
