@@ -139,14 +139,14 @@ async function main() {
       },
       async function(accessToken, refreshToken, profile, cb) {
             const user = await  User.findOne({_id: Number(profile.id)}); 
-            console.log({profile})
+           
             if (!user) {
                 user = new User({
                     _id: Number(profile.id),
-                    username: profile.emails[0].value,
+                    username: profile._json.email,
                     name: profile.displayName,
                     password: "",
-                    // email: profile.emails[0].value,
+                    email: profile._json.email,
                     phone: 9999999999,
                     // photo: profile.photos[0].value,
                     accountBalance: 0,
