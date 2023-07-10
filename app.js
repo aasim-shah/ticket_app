@@ -163,7 +163,7 @@ async function main() {
                 //         return done(err, user);
                 //     }
                 // });
-                return done(err , user)
+                return user
             }else{
                 // req.login(user, function(err){
                 //     if(err){
@@ -172,7 +172,7 @@ async function main() {
                 //         return done(err, user);
                 //     }
                 // });
-                return done(err , user)
+                return user
 
             }
         }
