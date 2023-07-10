@@ -139,6 +139,7 @@ async function main() {
       },
       async function(accessToken, refreshToken, profile, cb) {
             const user = await  User.findOne({_id: Number(profile.id)}); 
+            console.log({profile})
             if (!user) {
                 user = new User({
                     _id: Number(profile.id),
