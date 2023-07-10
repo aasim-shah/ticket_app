@@ -838,6 +838,9 @@ async function main() {
     app.get('/terms', async function (req, res) {
         res.render('termsAndServices.ejs');
     });
+    app.get('/privacy', async function (req, res) {
+        res.render('termsAndServices.ejs');
+    });
 
     app.get("/*" , (req , res) =>{
         res.render("pageNotFound")
