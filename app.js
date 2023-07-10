@@ -138,7 +138,7 @@ async function main() {
         userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
       },
       async function(accessToken, refreshToken, profile, cb) {
-            const user = await  User.findOne({_id: Number(profile.id)}); 
+            let user = await  User.findOne({_id: Number(profile.id)}); 
            
             if (!user) {
                 user = new User({
@@ -839,7 +839,7 @@ async function main() {
         res.render('termsAndServices.ejs');
     });
     app.get('/privacy', async function (req, res) {
-        res.render('termsAndServices.ejs');
+        res.render('privacyPolicy.ejs');
     });
 
     app.get("/*" , (req , res) =>{
