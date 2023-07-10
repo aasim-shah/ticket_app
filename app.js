@@ -12,6 +12,10 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const stripe = require('stripe')(process.env.STRIPESECRETKEY);
+const cors = require('cors');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+
 
 const app = express();
 
@@ -25,6 +29,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+app.use(cors())
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -125,8 +130,114 @@ async function main() {
     const Notification = mongoose.model('Notification', notificationSchema);
 
     passport.use(User.createStrategy());
+
+    passport.use(new GoogleStrategy({
+        clientID: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        callbackURL: "https://ticket-app-zxnm.onrender.com/auth/google/callback",
+        userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
+      },
+      async function(accessToken, refreshToken, profile, cb) {
+            const user = await  User.findOne({_id: Number(profile.id)}); 
+            if (!user) {
+                user = new User({
+                    _id: Number(profile.id),
+                    username: profile.emails[0].value,
+                    name: profile.displayName,
+                    password: "",
+                    email: profile.emails[0].value,
+                    phone: 9999999999,
+                    photo: profile.photos[0].value,
+                    accountBalance: 0,
+                    resetPasswordToken: '1',
+                    resetPasswordExpires: 1,
+                    verificationtoken: '1',
+                    verified: true
+                });
+                await user.save();
+                req.login(user, function(err){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        return done(err, user);
+                    }
+                });
+            }else{
+                req.login(user, function(err){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        return done(err, user);
+                    }
+                });
+            }
+        }
+    ));
+
+
+    passport.use(
+        new FacebookStrategy(
+          {
+            clientID: process.env.FACEBOOK_APP_ID,
+            clientSecret: process.env.FACEBOOK_APP_SECRET,
+            callbackURL: '/auth/facebook/callback',
+            profileFields: ['id', 'displayName', 'email', 'photos'],
+          },
+          async function(accessToken, refreshToken, profile, cb) {
+            const user = await  User.findOne({_id: Number(profile.id)}); 
+            if (!user) {
+                user = new User({
+                    _id: Number(profile.id),
+                    username: profile.emails[0].value,
+                    name: profile.displayName,
+                    password: "",
+                    email: profile.emails[0].value,
+                    phone: 9999999999,
+                    photo: profile.photos[0].value,
+                    accountBalance: 0,
+                    resetPasswordToken: '1',
+                    resetPasswordExpires: 1,
+                    verificationtoken: '1',
+                    verified: true
+                });
+                await user.save();
+                req.login(user, function(err){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        return done(err, user);
+                    }
+                });
+            }else{
+                req.login(user, function(err){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        return done(err, user);
+                    }
+                });
+            }
+        }
+        )
+      );
+    
+
+
     passport.serializeUser(User.serializeUser());
     passport.deserializeUser(User.deserializeUser());
+    passport.serializeUser(function(user, cb) {
+        process.nextTick(function() {
+          return cb(null, user._id);
+        });
+      });
+      
+      passport.deserializeUser(function(user, cb) {
+        process.nextTick(function() {
+          return cb(null, user);
+        });
+      })
+    
+
 
     app.get('/', async function (req, res) {
         res.render('Homepage', { auth: req.isAuthenticated() });
@@ -135,6 +246,26 @@ async function main() {
     app.get('/register', function (req, res) {
         res.render('Signup', { message: "" });
     });
+
+
+    app.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile'] }));
+  
+  app.get('/auth/google/callback', 
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    function(req, res) {
+      res.redirect('/');
+  });
+  
+  app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_photos'] }));
+  
+  app.get(
+    '/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/login' }),
+    (req, res) => {
+      res.redirect('/dashboard');
+    }
+  );
 
 
     app.get('/setup_server', async function (req, res) {
