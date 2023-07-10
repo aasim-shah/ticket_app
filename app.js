@@ -135,6 +135,7 @@ async function main() {
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
         callbackURL: "https://ticket-app-zxnm.onrender.com/auth/google/callback",
+        // callbackURL: "http://localhost:5000/auth/google/callback",
         userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
       },
       async function(accessToken, refreshToken, profile, cb) {
@@ -156,23 +157,9 @@ async function main() {
                     verified: true
                 });
                 await user.save();
-                // req.login(user, function(err){
-                //     if(err){
-                //         console.log(err);
-                //     }else{
-                //         return done(err, user);
-                //     }
-                // });
-                return user
+                return cb(null , user)
             }else{
-                // req.login(user, function(err){
-                //     if(err){
-                //         console.log(err);
-                //     }else{
-                //         return done(err, user);
-                //     }
-                // });
-                return user
+                return cb(null , user )
 
             }
         }
