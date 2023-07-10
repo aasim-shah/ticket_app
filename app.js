@@ -146,9 +146,9 @@ async function main() {
                     username: profile.emails[0].value,
                     name: profile.displayName,
                     password: "",
-                    email: profile.emails[0].value,
+                    // email: profile.emails[0].value,
                     phone: 9999999999,
-                    photo: profile.photos[0].value,
+                    // photo: profile.photos[0].value,
                     accountBalance: 0,
                     resetPasswordToken: '1',
                     resetPasswordExpires: 1,
@@ -250,7 +250,7 @@ async function main() {
 
 
     app.get('/auth/google',
-    passport.authenticate('google', { scope: ['profile'] }));
+    passport.authenticate('google', { scope: ['profile' ,"email"] }));
   
   app.get('/auth/google/callback', 
     passport.authenticate('google', { failureRedirect: '/login' }),
