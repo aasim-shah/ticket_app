@@ -150,7 +150,6 @@ async function main() {
                     password: "",
                     email: profile._json.email,
                     phone: 9999999999,
-                    // photo: profile.photos[0].value,
                     accountBalance: 0,
                     resetPasswordToken: '1',
                     resetPasswordExpires: 1,
@@ -176,16 +175,17 @@ async function main() {
             profileFields: ['id', 'displayName', 'email', 'photos'],
           },
           async function(accessToken, refreshToken, profile, cb) {
-            const user = await  User.findOne({_id: Number(profile.id)}); 
+            let user = await  User.findOne({_id: Number(profile.id)}); 
+            
+           
             if (!user) {
                 user = new User({
                     _id: Number(profile.id),
-                    username: profile.emails[0].value,
+                    username: profile._json.email,
                     name: profile.displayName,
                     password: "",
-                    email: profile.emails[0].value,
+                    email: profile._json.email,
                     phone: 9999999999,
-                    photo: profile.photos[0].value,
                     accountBalance: 0,
                     resetPasswordToken: '1',
                     resetPasswordExpires: 1,
@@ -193,21 +193,10 @@ async function main() {
                     verified: true
                 });
                 await user.save();
-                req.login(user, function(err){
-                    if(err){
-                        console.log(err);
-                    }else{
-                        return done(err, user);
-                    }
-                });
+                return cb(null , user)
             }else{
-                req.login(user, function(err){
-                    if(err){
-                        console.log(err);
-                    }else{
-                        return done(err, user);
-                    }
-                });
+                return cb(null , user )
+
             }
         }
         )
