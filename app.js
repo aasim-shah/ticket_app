@@ -172,7 +172,7 @@ async function main() {
           {
             clientID: process.env.FACEBOOK_APP_ID,
             clientSecret: process.env.FACEBOOK_APP_SECRET,
-            callbackURL: '/auth/facebook/callback',
+            callbackURL: 'https://ticket-app-zxnm.onrender.com/auth/facebook/callback',
             profileFields: ['id', 'displayName', 'email', 'photos'],
           },
           async function(accessToken, refreshToken, profile, cb) {
