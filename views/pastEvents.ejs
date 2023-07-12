@@ -38,12 +38,14 @@
                     <%= event.eventName %>
                   </td>
                   <td class=" px-4 text-white py-2">
-                    <%= event.startdate %>
+                    <%= moment(event.startdate).format('DD/MM/YY'); %>
                   </td>
                   <td class=" px-4 text-white py-2">
-                    <%= event.enddate %>
+                    <%= moment(event.enddate).format('DD/MM/YY'); %>
                   </td>
-                  <td class=" px-4 text-white py-2">Done</td>
+                  <td class=" px-4 text-white py-2">
+                    <%= event.eventEnd ? "Ended" : "Waiting" %>
+                  </td>
                 </tr>
                 <% }) %>
             </tbody>

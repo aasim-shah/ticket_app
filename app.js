@@ -370,7 +370,7 @@ async function main() {
     app.get('/pastEvents', async function (req, res) {
         if (req.isAuthenticated()) {
             const events = await Event.find({ eventEnd: true });
-            res.render('pastEvents', { events: events, user: req.user });
+            res.render('pastEvents', { events: events, user: req.user , moment });
 
         } else {
             res.redirect("/login")
@@ -541,17 +541,17 @@ async function main() {
                 if (Number(outputArray[i]) === winnerId) {
                     const notification = new Notification({
                         userId: Number(winnerId),
-                        notification: `Event ${event._id} has ended. You have won ${winnerValue} balance!`
+                        notification: `Event ${event.eventName} has ended. You have won ${winnerValue} balance!`
                     });
                     await notification.save();
                     const customerEmail = winner.email;
-                    const emailSubject = `Winner of ${event._id}`;
+                    const emailSubject = `Winner of ${event.eventName}`;
                     const emailText = `Dear ${winner.name},\nYou have won the event and have been awarded a balance of ${winnerValue}\n\nWith regards,\nGreat Escape team`;
                     sendOrderConfirmationEmail(customerEmail, emailText, emailSubject);
                 } else {
                     const notification = new Notification({
                         userId: Number(outputArray[i]),
-                        notification: `Event ${event._id} has ended. You have not won the event!`
+                        notification: `Event ${event.eventName} has ended. You have not won the event!`
                     });
                     await notification.save();
                 }
