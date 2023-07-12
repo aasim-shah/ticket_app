@@ -381,6 +381,7 @@ async function main() {
         console.log(req.params)
         if (req.isAuthenticated()) {
             const ids = await Id.findOne({ name: 'ids' });
+           try {
             const ticket = new Ticket({
                 _id: Number(ids.ticketId),
                 userId: Number(req.user._id),
@@ -392,6 +393,9 @@ async function main() {
             ids.ticketId = Number(ids.ticketId) + 3;
             await ids.save();
             res.redirect('/cart');
+           } catch (error) {
+               res.redirect('/login');
+           }
         } else {
             res.redirect('/login');
         }

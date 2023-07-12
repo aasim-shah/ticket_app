@@ -42,15 +42,25 @@
                   </tr>
                 </thead>
                 <tbody>
+                 <% if(events.length > 0){ %>
                   <% events.forEach(event => { %>
-                  <tr>
-                    <td class=" px-4 text-white py-2"><%= event.eventName %></td>
-                    <td class=" px-4 text-white py-2"><%= moment(event.startdate).format('DD/MM/YY'); %></td>
-                    <td class=" px-4 text-white py-2"><%= moment(event.enddate).format('DD/MM/YY'); %></td>
-                    <td class=" px-4 text-white py-2"><%= event.eventEnds ? "Ended" : "Waiting" %></td>
-                    <td class=" px-4 text-white py-2"><a href="/eventDraw/<%= event._id %>" class="py-2  px-3 bg-blue-400 rounded-md text-white font-bold w-full">Enter</a></td>
-                  </tr>
-                  <% }) %>
+                    <tr>
+                      <td class=" px-4 text-white py-2"><%= event.eventName %></td>
+                      <td class=" px-4 text-white py-2"><%= moment(event.startdate).format('DD/MM/YY'); %></td>
+                      <td class=" px-4 text-white py-2"><%= moment(event.enddate).format('DD/MM/YY'); %></td>
+                      <td class=" px-4 text-white py-2"><%= event.eventEnds ? "Ended" : "Waiting" %></td>
+                      <td class=" px-4 text-white py-2"><a href="/eventDraw/<%= event._id %>" class="py-2  px-3 bg-blue-400 rounded-md text-white font-bold w-full">Enter</a></td>
+                    </tr>
+                    <% }) %>
+                    <%}else{%>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td class=" px-4 text-white  py-12">
+                          No Event Found !
+                        </td>
+                      </tr>
+                    <%}%>
                 </tbody>
               </table>
             </div>

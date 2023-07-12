@@ -5,13 +5,10 @@
   <title>Payment Form</title>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://js.stripe.com/v3/"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      padding: 20px;
-      margin: 0;
-    }
+   
 
     h1 {
       text-align: center;
@@ -48,14 +45,6 @@
       margin-top: 10px;
     }
 
-    button {
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
 
     button:disabled {
       background-color: #ccc;
@@ -84,20 +73,20 @@
   </style>
 </head>
 
-<body class="bg-slate-900">
-  <h1>Payment Form</h1>
+<body class="bg-slate-800 py-12">
+  <h1 class="text-white mb-2">Payment Form</h1>
   <div class="payment-form">
     <form id="payment-form">
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name" placeholder="Enter your name">
+        <input type="text" class="px-3" id="name" name="name" placeholder="Enter your name">
       </div>
       <div class="form-group">
         <label for="card-element">Credit or debit card</label>
         <div id="card-element"></div>
         <div id="card-errors" style="margin-top: 1rem;" role="alert"></div>
       </div>
-      <button type="submit" value="<%= user %>" name="buyer">Submit Payment</button>
+      <button class="py-1 px-3 rounded-md bg-slate-700 text-white" type="submit" value="<%= user %>" name="buyer">Submit Payment</button>
     </form>
   </div>
 
