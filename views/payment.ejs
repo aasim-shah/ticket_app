@@ -84,7 +84,7 @@
   </style>
 </head>
 
-<body>
+<body class="bg-slate-900">
   <h1>Payment Form</h1>
   <div class="payment-form">
     <form id="payment-form">
@@ -155,12 +155,14 @@
                   successMessage.classList.add('success-message');
                   successMessage.textContent = 'Payment successful!';
                   form.appendChild(successMessage);
+                  window.location="/paymentSuccess"
                 } else {
                   // Payment failed, show an error message to the user
                   var errorMessage = document.createElement('div');
                   errorMessage.classList.add('error-message');
                   errorMessage.textContent = 'Payment failed!';
                   form.appendChild(errorMessage);
+                  window.location="/paymentFailed"
                 }
               });
           }

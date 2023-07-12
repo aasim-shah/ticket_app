@@ -347,7 +347,10 @@ async function main() {
 
     app.get('/profile', async function (req, res) {
         if (req.isAuthenticated()) {
-            res.render('Profile', { user: req.user });
+            console.log({user : req.user})
+            const tickets = await Ticket.find({userId : req.user._id})
+            const events = await Event.find({ eventEnd: false , userIds : req.user._id });
+            res.render('Profile', { user: req.user , tickets  , events});
         } else {
             res.redirect("/login")
         }
@@ -527,11 +530,6 @@ async function main() {
             const event = await Event.findOne({ _id: Number(req.params.eventId) });
             const w = Math.random() * (event.userIds.length);
             const fixedW = Math.ceil(w);
-            console.log({ fixedW })
-            console.log({ users: event.userIds })
-            console.log({ winnerValue: event.ticketValue[fixedW] })
-            console.log({ users1: event.userIds[1] })
-            console.log('winneris' + event.userIds[fixedW])
             const winnerId = Math.ceil(event.userIds[fixedW]);
             const winnerValue = Number(event.ticketValue[fixedW]);
             await Event.updateOne({ _id: Number(req.params.eventId) }, { eventEnd: true, winnerId: winnerId });
@@ -543,17 +541,17 @@ async function main() {
                 if (Number(outputArray[i]) === winnerId) {
                     const notification = new Notification({
                         userId: Number(winnerId),
-                        notification: `Event ${event.name} has ended. You have won ${winnerValue} balance!`
+                        notification: `Event ${event._id} has ended. You have won ${winnerValue} balance!`
                     });
                     await notification.save();
                     const customerEmail = winner.email;
-                    const emailSubject = `Winner of ${event.name}`;
-                    const emailText = `Dear ${req.body.name},\nYou have won the event and have been awarded a balance of ${winnerValue}\n\nWith regards,\nGreat Escape team`;
+                    const emailSubject = `Winner of ${event._id}`;
+                    const emailText = `Dear ${winner.name},\nYou have won the event and have been awarded a balance of ${winnerValue}\n\nWith regards,\nGreat Escape team`;
                     sendOrderConfirmationEmail(customerEmail, emailText, emailSubject);
                 } else {
                     const notification = new Notification({
                         userId: Number(outputArray[i]),
-                        notification: `Event ${event.name} has ended. You have not won the event!`
+                        notification: `Event ${event._id} has ended. You have not won the event!`
                     });
                     await notification.save();
                 }
@@ -718,9 +716,17 @@ async function main() {
             res.redirect("/login")
         }
     });
+    app.get('/paymentFailed', async function (req, res) {
+       res.render("paymentResp" , {message : "Payment Failed" , status : 0})
+    });
+    app.get('/paymentSuccess', async function (req, res) {
+       res.render("paymentResp" , {message : "Payment Successfull" , status : 1})
+    });
     app.post('/buyTickets', async function (req, res) {
         res.render('payment', { user: req.user, key: process.env.STRIPEPUBLISHABLEKEY, key2: process.env.STRIPEACCOUNTID });
     });
+
+
 
     app.post('/processPayment', async function (req, res) {
             try {

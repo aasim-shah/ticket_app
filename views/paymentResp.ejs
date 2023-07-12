@@ -14,13 +14,14 @@
   <body class="bg-slate-900">
     <%- include("./partials/navbar") %>
 
-<div class="flex justify-center my-12 items-center">
-    <p class="text-white text-2xl">
-        <%= message1 %>
+<div class="flex justify-center my-12 flex-col   items-center">
+  <p class="text-5xl my-5">
+    <%- status === 0 ? `😣` : `😍`%>
+  </p>
+    <p class="text-white text-xl">
+        <%= message %>
     </p>
-    <p class="text-white text-2xl mt-3">
-        <%= message2 %>
-    </p>
+    <a href="/" class="py-1 px w-6/12 mt-5 sm:w-[14rem] rounded-md bg-slate-700 text-center text-white">Go Home</a>
 </div>
   
 
