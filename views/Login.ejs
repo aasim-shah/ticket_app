@@ -28,7 +28,7 @@
     <%- include("./partials/sidebar") %>
   
 
-    <div class="w-9/12 sm:w-4/12 mx-auto">
+    <div class="w-9/12 sm:w-5/12 mx-auto">
       <% if(message){%>
         <p class="text-black py-2 bg-yellow-200 mt-4 rounded-full px-3 text-center my-2"><%= message %></p>
         <% }  %>
@@ -53,8 +53,15 @@
         <div class="border-t-2   border-gray-400 mt-5"></div>
     
         <div class="flex flex-col sm:flex-row mt-6 justify-center items-center gap-3">
-          <a href="/auth/google"  class="py-2 px-3 rounded-md bg-red-400 w-10/12 text-white font-semibold sm:mb-0">Login with Google </a>
-          <a href="/auth/facebook"  class="py-2 px-2 text-center rounded-md text-white font-semibold  bg-blue-400 w-11/12">Login with Facebook </a>
+          <a href="/auth/google"  class="py-2  flex flex-row justify-arround gap-3 items-center px-3 rounded-[1.4rem] bg-white  w-11/12 text-red-500  sm:mb-0">
+            <img class="w-8 h-8" src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo"/>
+          <span class=" text-sm font-semibold">  Signin with Google  </span>
+          </a>
+       
+          <a href="/auth/google"  class="py-2  flex flex-row justify-arround gap-3 items-center px-3 rounded-[1.4rem] bg-blue-500  w-11/12 text-white  sm:mb-0">
+            <img class="w-8 h-8" src="https://img.icons8.com/color/48/facebook-circled--v1.png" alt="facebook-circled--v1"/>
+          <span class=" text-sm font-semibold">  Signin with Facebook  </span>
+          </a>
       </div>
      
     </div>

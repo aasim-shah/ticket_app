@@ -73,7 +73,7 @@ async function sendOrderConfirmationEmail(customerEmail, emailText, emailSubject
 main().catch(err => console.log(err));
 
 async function main() {
-    await mongoose.connect(process.env.MONG);
+    await mongoose.connect(process.env.MONG).then(res => {console.log("db connected")}).catch(err => console.log(err));
     const idSchema = new mongoose.Schema({
         name: String,
         userId: Number,
@@ -127,6 +127,8 @@ async function main() {
         userId: Number,
         notification: String
     }, { timestamps: true });
+
+
 
     userSchema.plugin(passportLocalMongoose);
 
@@ -363,11 +365,33 @@ async function main() {
         }
     });
 
+
+
+    app.get('/search', (req, res) => {
+        const query = req.query.q;
+        console.log({query})
+        // Perform the MongoDB search using Mongoose
+        Event.find({ eventName: { $regex: query, $options: 'i' } }, )
+          .then(results => {
+              console.log({ results})
+            res.json(results);
+          })
+          .catch(error => {
+            console.log(error);
+            res.status(500).json({ error: 'An error occurred' });
+          });
+      });
+
+
     app.get('/currentEvents', async function (req, res) {
         if (req.isAuthenticated()) {
-            const events = await Event.find({ eventEnd: false });
-            console.log({ events })
-            res.render('Upcoming', { events: events, moment });
+          try {  const events = await Event.find({ eventEnd: false });
+          console.log({ events })
+            return   res.render('Upcoming', { events: events, moment });
+            
+        } catch (error) {
+            return   res.render('ServerError');
+        }
 
         } else {
             res.redirect("/login")

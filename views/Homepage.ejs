@@ -1,35 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-      <title>Homepage</title>
-  </head>
-  <body class="h-[80vh] w-full  bg-slate-900">
-    
-<%- include("./partials/homeNav") %>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <title>Raffle Rush</title>
+</head>
+
+<body class="h-[80vh] w-full  bg-slate-900">
+
+  <%- include("./partials/homeNav") %>
 
 
-<div class="w-full absolute" style="z-index: -3;">
-  <img src="assets/bg.jpg" class="w-full sm:h-[85vh]" alt="">
-</div>
-
-<div class="w-10/12 mx-auto h-[58vh]" style="z-index: 8;"> 
-  <p class="text-6xl text-yellow-400 my-8 sm:my-20 text-center">Raffle Rush </p>
-    <div class="flex flex-col sm:flex-row my-4  sm:my-12 gap-3 justify-center items-center">
-        <a href="/currentEvents" class="bg-slate-900  flex justify-center items-center text-white w-[15rem] rounded-md border-2 h-28 border-gray-600" >
-            Current Events
-        </a>
-        <a href="/pastEvents" class="bg-slate-900  flex justify-center items-center text-white w-[15rem] rounded-md border-2 h-28 border-gray-600" >
-            Past Events
-        </a>
+    <div class="w-full absolute" style="z-index: -3;">
+      <img src="assets/bg.jpg" class="w-full sm:h-[85vh]" alt="">
     </div>
-</div>
-<%- include("./partials/footer") %>
+
+    <div class="w-10/12 mx-auto h-[58vh]" style="z-index: 8;">
+      <p class="text-6xl text-yellow-400 mt-4 sm:my-6 text-center">Raffle Rush </p>
+
+      <div class="my-12">
+        <div class="relative">
+          <form id="searchForm" class="flex justify-center items-center">
+            <input type="text" autocomplete="off" name="query" placeholder="Search..."
+              class=" w-10/12 mx-auto outline-none sm:w-7/12 bg-slate-700 text-gray-300 px-6 py-2 rounded-[1rem]" />
+          </form>
+
+          <div id="searchResults"
+          class="absolute top-11 left-[27px] sm:left-[11rem] w-10/12 sm:w-7/12  bg-slate-700  border border-gray-700 shadow-md rounded-md py-2  hidden">
+          <div id="loadingText" class="font-bold mb-2 text-gray-500 text-center">Loading...</div>
+            <!-- Results will be dynamically added here -->
+
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row my-4  sm:my-12 gap-3 justify-center items-center">
+        <a href="/currentEvents"
+          class="bg-slate-900  flex justify-center items-center text-white w-[15rem] rounded-md border-2 h-28 border-gray-600">
+          Current Events
+        </a>
+        <a href="/pastEvents"
+          class="bg-slate-900  flex justify-center items-center text-white w-[15rem] rounded-md border-2 h-28 border-gray-600">
+          Past Events
+        </a>
+      </div>
+    </div>
+    <%- include("./partials/footer") %>
 
 
+      <script>
+        $(document).ready(function () {
+          let timeoutId;
 
+          $('#searchForm input[name="query"]').on('keyup', function () {
+            clearTimeout(timeoutId);
+
+            const query = $(this).val();
+            const searchResults = $('#searchResults');
+            searchResults.show();
+
+
+            timeoutId = setTimeout(function () {
+              // Make an AJAX request using Axios
+              axios.get(`/search?q=${query}`)
+                .then(response => {
+                  const results = response.data;
+
+                  searchResults.empty();
+
+                  if (results.length > 0) {
+                    results.forEach((result, index) => {
+                      const item = `
+<a href="event/${result._id}" class="flex mt-1 text-white justify-between px-4 py-1 flex-row border-b-2 border-gray-600">
+  <div class="flex flex-row gap-2">
+    <p class="w-12">
+    ${index + 1}.
+  </p>
+  <p class="">
+    ${result.eventName}
+  </p>
+    </div>
+  <p class="">
+    ${result.eventEnd ? "Ended" : "Live"}
+  </p>
+
+</a>`;
+                      searchResults.append(item);
+                    });
+
+                    searchResults.show();
+                  } else {
+                    searchResults.hide();
+                  }
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+            }, 500); // Delay the search by 500ms after the user stops typing
+          });
+        });
+      </script>
