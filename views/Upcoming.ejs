@@ -17,18 +17,7 @@
     <div class="w-10/12 mx-auto my-4 sm:my-12">
         <p class="text-white font-bold text-center mb-4 sm:mb-10">Upcoming Events</p>
         <div class="flex-col ">
-           <!-- <% if(events && events.length > 0){ %>
-
-         
-            <% events.forEach((event) =>{ %>
-                <div class="text-white text-center mb-3">
-                    <a href="/Upcoming/1">
-                        Event <%= event.eventName %>
-                    </a>
-                </div>
-                <%})%>
-
-            <%}%> -->
+        
             <div class="w-[20rem]  overflow-x-scroll sm:overflow-x-auto	sm:w-full">
 
             <table class="mx-auto">
@@ -43,13 +32,17 @@
                 </thead>
                 <tbody>
                  <% if(events.length > 0){ %>
-                  <% events.forEach(event => { %>
-                    <tr>
+                  <% events.forEach((event, index) => { %>
+                    <% if(index % 2 === 0) { %>
+                      <tr class="bg-slate-800 rounded-md">
+                    <% } else { %>
+                      <tr class="">
+                    <% } %>
                       <td class=" px-4 text-white py-2"><%= event.eventName %></td>
                       <td class=" px-4 text-white py-2"><%= moment(event.startdate).format('DD/MM/YY'); %></td>
                       <td class=" px-4 text-white py-2"><%= moment(event.enddate).format('DD/MM/YY'); %></td>
                       <td class=" px-4 text-white py-2"><%= event.eventEnds ? "Ended" : "Waiting" %></td>
-                      <td class=" px-4 text-white py-2"><a href="/eventDraw/<%= event._id %>" class="py-2  px-3 bg-blue-400 rounded-md text-white font-bold w-full">Enter</a></td>
+                      <td class=" px-4 text-white "><a href="/eventDraw/<%= event._id %>" class="py-1  px-3 bg-blue-400 rounded-md text-white font-bold w-full">Enter</a></td>
                     </tr>
                     <% }) %>
                     <%}else{%>

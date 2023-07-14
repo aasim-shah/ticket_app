@@ -77,8 +77,20 @@
             </div>
           </div>
         </div>
-        <div class="my-12 sm:w-10/12 w-[20rem] overflow-x-scroll sm:overflow-x-auto  mx-auto" id="events">
-          <table class="min-w-full border rounded-md border-gray-500">
+        <div class="my-12 sm:w-10/12 w-[20rem] table-container overflow-x-scroll sm:overflow-x-auto  mx-auto" id="events">
+          <div class="flex items-center mx-4 justify-between text-white mb-4">
+            <p class="text-white my-2 text-yellow-300 text-sm">Events List</p>
+            <div class="r">
+              <label for="rows" class="mr-2">Rows:</label>
+              <select class="rows-select px-3 py-1 bg-slate-700  rounded">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+              </select>
+            </div>
+          </div>
+          <table class="min-w-full border data-table rounded-md border-gray-500">
             <thead>
               <tr>
                 <th class="px-1 text-white py-2">Event Name</th>
@@ -88,34 +100,38 @@
                 <th class="px-4 text-white py-2">Action</th>
               </tr>
             </thead>
-            <tbody>
-              <% events.forEach(event=> { %>
-                <tr>
-                  <td class=" px-4 text-white py-2">
-                    <%= event.eventName %>
-                  </td>
-                  <td class=" px-4 text-white py-2">
-                    <%= moment(event.startdate).format('DD/MM/YY'); %>
-                  </td>
-                  <td class=" px-4 text-white py-2">
-                    <%= moment(event.enddate).format('DD/MM/YY'); %>
-                  </td>
-                  <td class=" px-4 text-white py-2">
-                    <%= event.eventEnd ? "Ended" : "Waiting" %>
-                  </td>
-                  <td class=" px-4 text-white py-2 flex flex-row  gap-2 items-center">
+            <tbody >
+              <% events.slice(0, 5).forEach((event , index)=> { %>
+                <% if(index % 2===0) { %>
+                  <tr class="bg-slate-800 rounded-md">
+                    <% } else { %>
+                  <tr class="">
+                    <% } %>
+                      <td class=" px-4 text-white py-2">
+                        <%= event.eventName %>
+                      </td>
+                      <td class=" px-4 text-white py-2">
+                        <%= moment(event.startdate).format('DD/MM/YY'); %>
+                      </td>
+                      <td class=" px-4 text-white py-2">
+                        <%= moment(event.enddate).format('DD/MM/YY'); %>
+                      </td>
+                      <td class=" px-4 text-white py-2">
+                        <%= event.eventEnd ? "Ended" : "Waiting" %>
+                      </td>
+                      <td class=" px-4 text-white py-2 flex flex-row  gap-2 items-center">
 
-                    <button data-id="<%= event._id %>" data-name="<%= event.eventName %>"
-                      data-startdate="<%= event.startdate %>" data-enddate="<%= event.enddate %>"
-                      data-ended="<%= event.eventEnds %>"
-                      class="py-1 px-1 bg-yellow-600 px-2  rounded-md text-white font-bold text-center showDetailsBtn"><i
-                        class="fa-regular fa-eye"></i></button>
-                    <a href="/deleteEvent/<%= event._id %>"
-                      class="py-1 px-1 bg-red-600 px-2 rounded-md text-white font-bold text-center"><i
-                        class="fa-solid fa-trash-can"></i></a>
-                  </td>
-                </tr>
-                <% }) %>
+                        <button data-id="<%= event._id %>" data-name="<%= event.eventName %>"
+                          data-startdate="<%= event.startdate %>" data-enddate="<%= event.enddate %>"
+                          data-ended="<%= event.eventEnds %>"
+                          class="py-1 px-1 bg-yellow-600 px-2  rounded-md text-white font-bold text-center showDetailsBtn"><i
+                            class="fa-regular fa-eye"></i></button>
+                        <a href="/deleteEvent/<%= event._id %>"
+                          class="py-1 px-1 bg-red-600 px-2 rounded-md text-white font-bold text-center"><i
+                            class="fa-solid fa-trash-can"></i></a>
+                      </td>
+                  </tr>
+                  <% }) %>
             </tbody>
           </table>
 
@@ -148,9 +164,20 @@
         <!-- Show Details Popup -->
 
 
-        <div class="my-12 sm:w-10/12 w-[21rem] px-3  overflow-x-scroll sm:overflow-x-auto mx-auto">
-          <p class="text-white my-2 text-yellow-300 text-sm">Users List</p>
-          <table class="min-w-full border rounded-md border-gray-500 mx-auto">
+        <div class="my-12 sm:w-10/12 w-[21rem] px-3 table-container  overflow-x-scroll sm:overflow-x-auto mx-auto">
+          <div class="flex items-center justify-between text-white mb-4">
+            <p class="text-white my-2 text-yellow-300 text-sm">Users List</p>
+            <div class="r">
+              <label for="rows" class="mr-2">Rows:</label>
+              <select class="rows-select px-3 py-1 bg-slate-700  rounded">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+              </select>
+            </div>
+          </div>
+          <table class="min-w-full border rounded-md data-table border-gray-500 mx-auto">
             <thead>
               <tr>
                 <th class="px-1 text-white py-2">Full Name </th>
@@ -161,30 +188,34 @@
               </tr>
             </thead>
             <tbody>
-              <% users.forEach(user=> { %>
-                <tr>
-                  <td class=" px-4 text-white py-2">
-                    <%= user.name %>
-                  </td>
-                  <td class=" px-4 text-white py-2">
-                    <%= user.email %>
-                  </td>
-                  <td class=" px-4 text-white py-2">
-                    <%= user.phone %>
-                  </td>
-                  <td class=" px-4 text-white py-2">
-                    <%= user.verified ? "verified" : "Not verified" %>
-                  </td>
-                  <td class=" px-4 text-white py-2 flex flex-row  gap-2 items-center">
+              <% users.slice(0, 5).forEach((user , index)=> { %>
+                <% if(index % 2===0) { %>
+                  <tr class="bg-slate-800 rounded-md">
+                    <% } else { %>
+                  <tr class="">
+                    <% } %>
+                      <td class=" px-4 text-white py-2">
+                        <%= user.name %>
+                      </td>
+                      <td class=" px-4 text-white py-2">
+                        <%= user.email %>
+                      </td>
+                      <td class=" px-4 text-white py-2">
+                        <%= user.phone %>
+                      </td>
+                      <td class=" px-4 text-white py-2">
+                        <%= user.verified ? "verified" : "Not verified" %>
+                      </td>
+                      <td class=" px-4 text-white py-2 flex flex-row  gap-2 items-center">
 
-                    <button class="py-1 px-1 bg-yellow-600 px-2  rounded-md text-white font-bold text-center "><i
-                        class="fa-regular fa-eye"></i></button>
-                    <a href="/deleteUser/<%= user._id %>"
-                      class="py-1 px-1 bg-red-600 px-2 rounded-md text-white font-bold text-center"><i
-                        class="fa-solid fa-trash-can"></i></a>
-                  </td>
-                </tr>
-                <% }) %>
+                        <button class="py-1 px-1 bg-yellow-600 px-2  rounded-md text-white font-bold text-center "><i
+                            class="fa-regular fa-eye"></i></button>
+                        <a href="/deleteUser/<%= user._id %>"
+                          class="py-1 px-1 bg-red-600 px-2 rounded-md text-white font-bold text-center"><i
+                            class="fa-solid fa-trash-can"></i></a>
+                      </td>
+                  </tr>
+                  <% }) %>
             </tbody>
           </table>
 
@@ -240,6 +271,24 @@
 
           $('#closeBtn').on('click', function () {
             $('#popup').addClass('hidden');
+          });
+        });
+      </script>
+
+      <script>
+        $(document).ready(function () {
+          // Function to handle dropdown change event for all tables
+          $('.rows-select').on('change', function () {
+            var selectedRows = parseInt($(this).val());
+            var tableContainer = $(this).closest('.table-container');
+            var table = tableContainer.find('.data-table');
+            var allRows = table.find('tbody tr');
+
+            // Hide all rows initially
+            allRows.hide();
+
+            // Show selected number of rows
+            allRows.slice(0, selectedRows).show();
           });
         });
       </script>

@@ -93,7 +93,14 @@ async function main() {
         isAdmin: Boolean,
         resetPasswordExpires: Number,
         verificationtToken: String,
-        verified: Boolean
+        verified: Boolean,
+        winningTickets: [{
+            _id: Number,
+            userId: Number,
+            eventId: Number,
+            value: Number,
+            bought: Boolean
+        }]
     });
     const eventSchema = new mongoose.Schema({
         _id: Number,
@@ -536,9 +543,12 @@ async function main() {
             const fixedW = Math.ceil(w);
             const winnerId = Math.ceil(event.userIds[fixedW]);
             const winnerValue = Number(event.ticketValue[fixedW]);
+            const winningTicket = await Ticket.findOne({ticketValue : fixedW})
+            console.log({winningTicket})
             await Event.updateOne({ _id: Number(req.params.eventId) }, { eventEnd: true, winnerId: winnerId });
             const winner = await User.findOne({ _id: winnerId })
             winner.accountBalance = Number(winner.accountBalance) + winnerValue;
+            winner.winningTickets.push(winningTicket)
             await winner.save();
             let outputArray = Array.from(new Set(event.userIds));
             for (let i = 0; i < outputArray.length; i++) {

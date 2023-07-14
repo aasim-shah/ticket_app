@@ -10,6 +10,7 @@
     integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <title>Events</title>
+
 </head>
 
 
@@ -23,27 +24,36 @@
 
         <div class="w-[20rem] overflow-x-scroll sm:overflow-x-auto	sm:w-11/12">
           <table class="min-w-full">
-            <thead>
-              <tr>
-                <th class="px-1 text-white py-2">Event Name</th>
+            <thead class=""> 
+              <tr class="">
+                <th class="px-1 text-white py-2 ">#</th>
+                <th class="px-1 text-white py-2 ">Event Name</th>
                 <th class="px-4 text-white py-2">Start Date</th>
                 <th class="px-4 text-white py-2">End Date</th>
                 <th class="px-4 text-white py-2">Status</th>
               </tr>
             </thead>
             <tbody>
-              <% events.forEach(event=> { %>
-                <tr>
-                  <td class=" px-4 text-white py-2">
+              <% events.forEach((event , index)=> { %>
+
+                <% if(index % 2 === 0) { %>
+                  <tr class="bg-slate-800 rounded-md">
+                <% } else { %>
+                  <tr class="">
+                <% } %>
+                  <td class=" px-4 text-white text-center py-2">
+                    <%= index+1 %>
+                  </td>
+                  <td class=" px-4 text-white text-center py-2">
                     <%= event.eventName %>
                   </td>
-                  <td class=" px-4 text-white py-2">
+                  <td class=" px-4 text-white text-center py-2">
                     <%= moment(event.startdate).format('DD/MM/YY'); %>
                   </td>
-                  <td class=" px-4 text-white py-2">
+                  <td class=" px-4 text-white text-center py-2">
                     <%= moment(event.enddate).format('DD/MM/YY'); %>
                   </td>
-                  <td class=" px-4 text-white py-2">
+                  <td class=" px-4 text-white text-center py-2">
                     <%= event.eventEnd ? "Ended" : "Waiting" %>
                   </td>
                 </tr>
