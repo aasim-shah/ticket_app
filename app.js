@@ -445,12 +445,12 @@ async function main() {
     });
 
     app.get('/deleteTicket/:ticketid', async function (req, res) {
-        if (req.isAuthenticated() && req.user.isAdmin) {
+        if (req.isAuthenticated()) {
 
             await Ticket.deleteOne({ _id: Number(req.params.ticketid) });
             res.redirect('/cart');
         } else {
-            res.redirect("/admin")
+            res.redirect("/login")
         }
     });
     app.get('/deleteEvent/:eventId', async function (req, res) {
