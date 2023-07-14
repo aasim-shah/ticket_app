@@ -73,7 +73,8 @@ async function sendOrderConfirmationEmail(customerEmail, emailText, emailSubject
 main().catch(err => console.log(err));
 
 async function main() {
-    await mongoose.connect(process.env.MONG).then(res => {console.log("db connected")}).catch(err => console.log(err));
+    await mongoose.connect(process.env.MONG,  { useNewUrlParser: true, useUnifiedTopology: true }).then(res => {console.log("db connected")}).catch(err => console.log(err));
+    mongoose.set('strictQuery', false);
     const idSchema = new mongoose.Schema({
         name: String,
         userId: Number,

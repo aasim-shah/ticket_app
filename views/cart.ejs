@@ -33,7 +33,9 @@
                     <a href="/deleteTicket/<%= ticket._id %>" class="py-1 px-1 bg-red-600 px-2 ml-7 rounded-md text-white font-bold text-center"><i class="fa-solid fa-trash-can"></i></a>
                 </div>
                 </div>
-                <%}) }%>
+                <%})}else{%>
+                    <p class="text-gray-400 font-bold text-sm text-center">No Ticket Selected !</p>
+                <%}%>
 
                     <div class="flex justify-center items-center mt-6">
                         <a href="/buyTickets" class="py-2  px-3 bg-slate-700 w-[15rem] rounded-md text-white font-bold text-center">Purchanse
