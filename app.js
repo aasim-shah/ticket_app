@@ -167,6 +167,8 @@ async function main() {
                 await user.save();
                 return cb(null , user)
             }else{
+                user.verified = true
+                await user.save()
                 return cb(null , user )
 
             }
