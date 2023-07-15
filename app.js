@@ -149,9 +149,7 @@ async function main() {
         userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
       },
       async function(accessToken, refreshToken, profile, cb) {
-            let user = await  User.findOne({_id: Number(profile.id)}); 
-            
-           
+            let user = await  User.findOne({email : profile._json.email}); 
             if (!user) {
                 user = new User({
                     _id: Number(profile.id),
