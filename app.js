@@ -47,7 +47,7 @@ const upload = multer({ storage: storage });
 const transporter = nodemailer.createTransport({
     service: process.env.SERVICE,
     auth: {
-        user: process.env.USER,
+        user: process.env.USER,                                     
         pass: process.env.PASS
     }
 });
@@ -857,7 +857,7 @@ async function main() {
         await Id.updateOne({ name: 'ids' }, { eventId: Number(ids.eventId) + 4 });
 
 
-        res.redirect('/addEvent');
+        res.redirect('/adminHome');
     });
 
 

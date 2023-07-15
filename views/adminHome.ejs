@@ -39,10 +39,8 @@
             <button class="sidebar-button  text-gray-200 hover:text-white  py-1 px-2 rounded-md"
               onclick="toggleDropdown('settings')">Users</button>
             <ul id="settings-dropdown" class="dropdown hidden ml-10 mt-2">
-              <li><a href="#" class=" text-gray-200 hover:text-white  py-1 px-2 rounded-md text-sm text-gray-300">Users
+              <li><a href="#users" class=" text-gray-200 hover:text-white  py-1 px-2 rounded-md text-sm text-gray-300">Users
                   List</a></li>
-              <li><a href="#" class=" text-gray-200 hover:text-white  py-1 px-2 rounded-md text-sm text-gray-300">Active
-                  Users</a></li>
 
             </ul>
           </div>
@@ -164,7 +162,7 @@
         <!-- Show Details Popup -->
 
 
-        <div class="my-12 sm:w-10/12 w-[21rem] px-3 table-container  overflow-x-scroll sm:overflow-x-auto mx-auto">
+        <div id="users" class="my-12 sm:w-10/12 w-[21rem] px-3 table-container  overflow-x-scroll sm:overflow-x-auto mx-auto">
           <div class="flex items-center justify-between text-white mb-4">
             <p class="text-white my-2 text-yellow-300 text-sm">Users List</p>
             <div class="r">
@@ -207,9 +205,6 @@
                         <%= user.verified ? "verified" : "Not verified" %>
                       </td>
                       <td class=" px-4 text-white py-2 flex flex-row  gap-2 items-center">
-
-                        <button class="py-1 px-1 bg-yellow-600 px-2  rounded-md text-white font-bold text-center "><i
-                            class="fa-regular fa-eye"></i></button>
                         <a href="/deleteUser/<%= user._id %>"
                           class="py-1 px-1 bg-red-600 px-2 rounded-md text-white font-bold text-center"><i
                             class="fa-solid fa-trash-can"></i></a>
